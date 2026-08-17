@@ -7,6 +7,7 @@ public class Histogram {
 
     public Histogram(int bins){
         // inicializar todos los campos con 0
+        vector = new double[bins];
         for(int i=0;i<bins;i++){
             vector[i]= 0;
         }

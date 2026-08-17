@@ -22,6 +22,8 @@ public class Image {
             // intentar guardar imagen en bufer
             bufferedImage = ImageIO.read(inputFile);
 
+            System.out.println(bufferedImage.getWidth());
+
             // inicializar
             pixelMatrix = new IntMatrix(bufferedImage.getWidth(),bufferedImage.getHeight());
 
@@ -40,7 +42,7 @@ public class Image {
             // calcular histograma
             this.histogram = ImageHistogramCalculator.calculateNormalized(this,binQuantity);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -57,7 +59,7 @@ public class Image {
                     try{
                         pixelMatrix.insert(row,col,bufferedImage.getRGB(col, row)); // .getRGB obtiene valor para el color
                     } catch (Exception e){
-                        System.out.println(e.getStackTrace());
+                        System.out.println(e.getMessage());
                     }
 
                 }

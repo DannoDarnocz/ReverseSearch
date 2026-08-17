@@ -21,17 +21,19 @@ public class IntMatrix {
         usedFields = 0;
     }
 
-    public void insert(int row, int col, int value){
-        if(row>rows||col>columns){
-            throw new IndexOutOfBoundsException("La celda especificada esta fuera del rango");
+    public void insert(int iRow, int iColumn, int value){
+        if(iRow>rows-1||iColumn>columns-1){
+            throw new ArrayIndexOutOfBoundsException("El indice especificado para la matriz de enteros esta fuera del rango");
         }
-        matrix[row][col] = value;
-        System.out.println("Prieba");
+        matrix[iRow][iColumn] = value;
         usedFields++;
     }
 
-    public int get(int row, int col){
-        return matrix[row][col];
+    public int get(int iRow, int iColumn){
+        if(iRow>rows-1||iColumn>columns-1){
+            throw new ArrayIndexOutOfBoundsException("El indice especificado para la matriz de enteros esta fuera del rango");
+        }
+        return matrix[iRow][iColumn];
     }
 
     public int size() {return rows*columns;}
