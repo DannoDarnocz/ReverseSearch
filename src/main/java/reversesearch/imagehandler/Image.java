@@ -1,13 +1,17 @@
 package reversesearch.imagehandler;
 
+import reversesearch.structure.IntMatrix;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class imageMatrix {
-    private int[][] pixelMatrix;  //todo: meter esto en una clase aparte
-    imageMatrix(String path){
+public class Image {
+    int width;
+    int height;
+    private IntMatrix pixelMatrix;
+    Image(String path){
         try {
             File inputFile = new File(path); // abrir imagen
 
@@ -15,20 +19,25 @@ public class imageMatrix {
             BufferedImage img = ImageIO.read(inputFile);
 
             // obtener dimensiones
-            int width = img.getWidth();
-            int height = img.getHeight();
-
-            // crear matriz con dimensiones
-            this.pixelMatrix = new int[height][width];
+            this.width =  img.getWidth();
+            this.height =  img.getHeight();
 
             // insertar cada pixel en la matriz con su color
             for (int row = 0; row < height; row++) {
                 for (int col = 0; col < width; col++) {
-                    pixelMatrix[row][col] = img.getRGB(col, row); // .getRGB obtiene valor para el color
+                    pixelMatrix.insert(row,col,img.getRGB(col, row)); // .getRGB obtiene valor para el color
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    int getWidth(){return width;};
+    int getHeight(){return height;};
+    int getSize() {return width*height;};
+
+    public IntMatrix getPixelMatrix(){
+        return pixelMatrix;
     }
 }
