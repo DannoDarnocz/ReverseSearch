@@ -23,13 +23,19 @@ public class HistogramCalculator {
                 // bits que nos interesan en los últimos 8 bits
                 // 8 bits de alfa, 8 de red, 8 de green, 8 de blue
                 // hacer "and" de 0xFF hace que los ultimos 8 bits sean 1, poniendo el resto en 0
-                int r = (currentRGB >> 16) & 0xFF;
-                int g = (currentRGB >> 8)  & 0xFF;
-                int b =  currentRGB       & 0xFF;
+                int red = (currentRGB >> 16) & 0xFF;
+                int green = (currentRGB >> 8)  & 0xFF;
+                int blue =  currentRGB       & 0xFF;
 
-                //todo: poner formula bien
-                //int currentBin = Math.min( / interval, binQuantity-1); // no hay parte decimal, solo se queda lo entero
-                //histogram.sumBin(currentBin); // sumarle uno a ese bin
+                // obtener el bin al que pertenece cada color por individual
+                int redBin = Math.min(red / interval, binQuantity-1);
+                int greenBin = Math.min(green / interval, binQuantity-1);
+                int blueBin = Math.min(blue / interval, binQuantity-1);
+
+                // usar formula para obtener el valor caracteristico del pixel (bin general)
+                int overallBin = (int) (redBin * Math.pow(binQuantity,2)+greenBin*binQuantity+blueBin);
+
+                histogram.sumBin(overallBin); // sumarle uno a ese bin "general" para ese pixel
             }
         }
 

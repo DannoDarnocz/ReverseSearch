@@ -63,9 +63,6 @@ public class Image {
 
                 }
             }
-
-            // calcular histograma
-            this.histogram = HistogramCalculator.calculateNormalized(this,4);
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
