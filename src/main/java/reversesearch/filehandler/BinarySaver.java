@@ -1,4 +1,4 @@
 package reversesearch.filehandler;
 
-public class SaveToBinary {
+public class BinarySaver {
 }

@@ -1,22 +1,22 @@
 package reversesearch.structure.doublylinkedlist;
 
-public class DoublyLinkedList {// cualquier numero
+public class DoublyLinkedList<T> {// cualquier numero
     private DoublyLinkedNode first; // raiz
     private DoublyLinkedNode last; // ultimo nodo
 
     // metodos vistos en clase
-    public void addStart(int num) {
-        first = new DoublyLinkedNode(num);
+    public void addStart(T element) {
+        first = new DoublyLinkedNode(element);
         if(first.getPrev() == null){
             last=first;
         }
     }
 
-    public void addEnd(int num){
+    public void addEnd(T element){
         if(first==null){
-            last=first=new DoublyLinkedNode(num,null,first);
+            last=first=new DoublyLinkedNode(element,null,first);
         }else{
-            last.setNext(new DoublyLinkedNode(num));
+            last.setNext(new DoublyLinkedNode(element));
             last=last.getNext();
         }
     }

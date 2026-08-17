@@ -3,7 +3,7 @@ package reversesearch.likenessmethod;
 import reversesearch.imagehandler.Image;
 import reversesearch.structure.IntMatrix;
 
-public class CosineSimilarity extends LikenessMethod {
+/*public class CosineSimilarity extends LikenessMethod {
     @Override
     public double compare(Image img1, Image img2) {
         // obtener vectores de cada imagen
@@ -14,3 +14,4 @@ public class CosineSimilarity extends LikenessMethod {
         return result;
     }
 }
+*/

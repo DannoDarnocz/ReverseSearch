@@ -13,9 +13,10 @@ public class Main extends Application {
     // parametro es el escenario principal
     // siempre hay que tirar excepcion cuando es codigo externo al de nosotros
     public void start(Stage escenarioPrincipal) throws Exception{
-        Parent raiz = FXMLLoader.load(getClass().getResource("ui/main.fxml")); // convertir codigo fxml obteniendolo de la clase del recurso especificado
+        Parent raiz = FXMLLoader.load(getClass().getResource("ui/image_database_select.fxml")); // convertir codigo fxml obteniendolo de la clase del recurso especificado
         escenarioPrincipal.setTitle("Reverse Search"); // ponerle titulo a la ventana
-        escenarioPrincipal.setScene(new Scene(raiz,400,640)); // nueva escena del raiz
+        escenarioPrincipal.setScene(new Scene(raiz,550,400)); // nueva escena del raiz
+        escenarioPrincipal.setResizable(false); // que no se pueda cambiar su tamaño
         escenarioPrincipal.show();
     }
 
