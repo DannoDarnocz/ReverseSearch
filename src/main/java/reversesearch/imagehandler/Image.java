@@ -1,6 +1,5 @@
 package reversesearch.imagehandler;
 
-import reversesearch.structure.Histogram;
 import reversesearch.structure.IntMatrix;
 
 import javax.imageio.ImageIO;
@@ -13,7 +12,6 @@ public class Image {
     static int binQuantity = 4;
     private BufferedImage bufferedImage;
     private IntMatrix pixelMatrix;
-    private Histogram histogram;
 
     public Image(String path){
 
@@ -40,7 +38,8 @@ public class Image {
             }
 
             // calcular histograma
-            this.histogram = ImageHistogramCalculator.calculateNormalized(this,binQuantity);
+            // todo: separar histograma
+            //this.histogram = HistogramCalculator.calculateNormalized(this,binQuantity);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -66,7 +65,7 @@ public class Image {
             }
 
             // calcular histograma
-            this.histogram = ImageHistogramCalculator.calculateNormalized(this,4);
+            this.histogram = HistogramCalculator.calculateNormalized(this,4);
         }catch (Exception e) {
             throw new RuntimeException(e);
         }

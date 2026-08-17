@@ -1,4 +1,4 @@
-package reversesearch.structure;
+package reversesearch.imagehandler;
 
 public class Histogram {
     double[] vector;

@@ -1,7 +1,6 @@
 package reversesearch.likenessmethod;
 
-import reversesearch.imagehandler.Image;
-import reversesearch.structure.Histogram;
+import reversesearch.imagehandler.Histogram;
 
 import java.security.InvalidParameterException;
 

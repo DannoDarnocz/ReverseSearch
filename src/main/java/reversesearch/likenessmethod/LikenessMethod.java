@@ -1,6 +1,5 @@
 package reversesearch.likenessmethod;
-import reversesearch.imagehandler.Image;
-import reversesearch.structure.Histogram;
+import reversesearch.imagehandler.Histogram;
 
 abstract class LikenessMethod {
     // retorna un double con los calculos, luego afuera se hace lo que se necesite con ese resultado

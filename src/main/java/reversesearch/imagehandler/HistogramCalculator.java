@@ -1,9 +1,8 @@
 package reversesearch.imagehandler;
 
-import reversesearch.structure.Histogram;
 import reversesearch.structure.IntMatrix;
 
-public class ImageHistogramCalculator {
+public class HistogramCalculator {
     // única responsabilidad de calcular histograma normalizado
     static public Histogram calculateNormalized(Image img, int binQuantity){
         // primero calcular histograma normal con la cantidad de bins

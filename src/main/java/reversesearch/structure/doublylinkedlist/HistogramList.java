@@ -1,0 +1,9 @@
+package reversesearch.structure.doublylinkedlist;
+
+import reversesearch.imagehandler.Image;
+
+public class HistogramList extends DoublyLinkedList {
+    public HistogramList orderByLikeness(Image targetImage){
+        // todo: implementar strategy para el metodo de ordenamiento
+    }
+}
