@@ -11,7 +11,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import reversesearch.filehandler.FolderLoader;
 import reversesearch.filehandler.Loader;
-import reversesearch.structure.doublylinkedlist.ImageList;
+import reversesearch.structure.doublylinkedlist.BufferedImageList;
 
 import java.io.File;
 
@@ -35,7 +35,7 @@ public class DatabaseSelectController {
             // leer carpeta si se puede y usuario no cancelo
             if(selectedDirectory!=null){
                 Loader loader = FolderLoader.getInstance();
-                ImageList database = loader.loadHistograms(selectedDirectory.getAbsolutePath());
+                BufferedImageList database = loader.loadHistograms(selectedDirectory.getAbsolutePath());
             }
         });
         btnLoadBinary.setOnAction(    event ->{

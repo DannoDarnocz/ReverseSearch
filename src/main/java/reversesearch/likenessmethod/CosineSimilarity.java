@@ -1,8 +1,5 @@
 package reversesearch.likenessmethod;
 
-import reversesearch.imagehandler.Image;
-import reversesearch.structure.IntMatrix;
-
 /*public class CosineSimilarity extends LikenessMethod {
     @Override
     public double compare(Image img1, Image img2) {

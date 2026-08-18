@@ -1,15 +1,12 @@
 package reversesearch.filehandler;
 
 import reversesearch.imagehandler.Image;
-import reversesearch.structure.doublylinkedlist.ImageList;
+import reversesearch.structure.doublylinkedlist.BufferedImageList;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class FolderLoader extends Loader {
     // singleton
@@ -23,8 +20,8 @@ public class FolderLoader extends Loader {
 
 
     @Override
-    public ImageList loadHistograms(String path) {
-        ImageList newList = new ImageList();
+    public BufferedImageList loadHistograms(String path) {
+        BufferedImageList newList = new BufferedImageList();
         File directory = new File(path); // abrir directorio
 
         if (directory.isDirectory()) { // verificar que es directorio
@@ -55,7 +52,7 @@ public class FolderLoader extends Loader {
 
             }
 
-            return new ImageList();
+            return new BufferedImageList();
         }
         return null; // no se pudo hacer nada
     }

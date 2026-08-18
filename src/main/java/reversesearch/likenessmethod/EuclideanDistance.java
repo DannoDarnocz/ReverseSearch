@@ -18,9 +18,9 @@ public class EuclideanDistance extends LikenessMethod {
 
         // sumatoria de (pi-qi) a la 2
         for(int i=0;i<histogram1.binQuantity();i++){
-            double current1 = histogram1.get(i);
-            double current2 = histogram2.get(i);
-            sum+=Math.pow(current1-current2,2);
+            double currentBin1 = histogram1.getBin(i);
+            double currentBin2 = histogram2.getBin(i);
+            sum+=Math.pow(currentBin1-currentBin2,2);
         }
 
         // raiz cuadrada al final
