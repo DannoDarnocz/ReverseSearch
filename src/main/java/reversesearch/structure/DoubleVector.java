@@ -11,6 +11,7 @@ public class DoubleVector {
     }
 
    public void sumIndex(int i){
+        if(i>=size) throw new ArrayIndexOutOfBoundsException("El indice para el DoubleVector está fuera de rango: " + i + ">="+  size);
         vector[i]++;
     }
 

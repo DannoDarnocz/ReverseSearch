@@ -1,6 +1,6 @@
-package reversesearch.filehandler;
+/*package reversesearch.filehandler;
 
-import reversesearch.structure.doublylinkedlist.BufferedImageList;
+import reversesearch.structure.doublylinkedlist.ImageReferenceList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,17 +17,18 @@ public class BinaryLoader extends Loader {
     }
 
     @Override
-    public BufferedImageList loadHistograms(String path) {
+    public HistogramList loadHistograms(String path) {
 
         File inputFile = new File(path); // abrir imagen
         try (Scanner myReader = new Scanner(inputFile)) {
-            BufferedImageList newList = new BufferedImageList();
+            ImageReferenceList newList = new ImageReferenceList();
             //newList.addStart(current); // añadir al inicio porque es mas rapido
         } catch (FileNotFoundException e) {
             System.out.println("Ha ocurrido un error al abrir el archivo binario de histogramas.");
             e.printStackTrace();
         }
 
-        return new BufferedImageList();
+        return new ImageReferenceList();
     }
 }
+*/

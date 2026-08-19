@@ -5,6 +5,13 @@ public class DoublyLinkedList<T> {// cualquier numero
     private DoublyLinkedNode last; // ultimo nodo
     private int size; //para metodo tamano, elementos de la lista
 
+    public String serialize(){
+        /*String result;
+        ListIterator<T> i = new ListIterator;
+        result += i.toString() + "";*/
+        return "";
+    }
+
     // metodos vistos en clase
     public void addStart(T element) {
       if(first==null){
@@ -81,6 +88,7 @@ public class DoublyLinkedList<T> {// cualquier numero
         }
         size--;
     }
+    public Boolean isEmpty(){return size==0;}
     public int size(){
         return size;
     }

@@ -9,29 +9,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="705.0" prefWidth="588.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="705.0" prefWidth="588.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reversesearch.ui.MainController">
    <children>
-      <Label fx:id="lblTitle" alignment="CENTER" layoutX="126.0" layoutY="26.0" prefHeight="38.0" prefWidth="290.0" text="REVERSE SEARCH">
+      <Label fx:id="lblTitle" alignment="CENTER" layoutX="135.0" layoutY="14.0" prefHeight="38.0" prefWidth="290.0" text="REVERSE SEARCH">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
-      <Button fx:id="btnUpload" layoutX="240.0" layoutY="134.0" mnemonicParsing="false" text="Subir imagen" />
-      <Label alignment="CENTER" layoutX="188.0" layoutY="204.0" prefHeight="17.0" prefWidth="168.0" text="Resultados" />
-      <ScrollPane fx:id="scrlResults" layoutX="33.0" layoutY="238.0" prefHeight="378.0" prefWidth="522.0">
+      <Button fx:id="btnUpload" layoutX="167.0" layoutY="178.0" mnemonicParsing="false" text="Subir imagen" />
+      <Label alignment="CENTER" layoutX="210.0" layoutY="232.0" prefHeight="17.0" prefWidth="168.0" text="Resultados" />
+      <ScrollPane fx:id="scrlResults" layoutX="33.0" layoutY="263.0" prefHeight="354.0" prefWidth="522.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
         </content>
       </ScrollPane>
-      <ChoiceBox fx:id="chbSortMethod" layoutX="259.0" layoutY="61.0" prefWidth="150.0" />
-      <Separator layoutX="11.0" layoutY="181.0" prefHeight="0.0" prefWidth="521.0" />
-      <ChoiceBox fx:id="chbLikenessMethod" layoutX="259.0" layoutY="97.0" prefWidth="150.0" />
-      <Label layoutX="92.0" layoutY="65.0" text="Método de ordenamiento" />
-      <Label layoutX="95.0" layoutY="101.0" text="Método de comparación" />
+      <ChoiceBox fx:id="chbSortMethod" layoutX="259.0" layoutY="87.0" prefHeight="25.0" prefWidth="196.0" />
+      <Separator layoutX="45.0" layoutY="216.0" prefHeight="0.0" prefWidth="521.0" />
+      <ChoiceBox fx:id="chbLikenessMethod" layoutX="259.0" layoutY="123.0" prefHeight="25.0" prefWidth="196.0" />
+      <Label layoutX="92.0" layoutY="91.0" text="Método de ordenamiento" />
+      <Label layoutX="95.0" layoutY="127.0" text="Método de comparación" />
       <Label layoutX="33.0" layoutY="645.0" text="Tiempo de ordenamiento" />
       <Label layoutX="280.0" layoutY="645.0" text="Tiempo de comparación" />
       <TextField fx:id="txtOrderTime" layoutX="177.0" layoutY="642.0" prefHeight="26.0" prefWidth="73.0" />
       <TextField fx:id="txtComparisonTime" layoutX="430.0" layoutY="640.0" prefHeight="26.0" prefWidth="102.0" />
+      <Button fx:id="btnSearch" layoutX="284.0" layoutY="178.0" mnemonicParsing="false" text="Buscar similares" />
    </children>
 </AnchorPane>

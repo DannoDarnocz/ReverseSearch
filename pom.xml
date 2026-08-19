@@ -32,6 +32,11 @@
             <artifactId>json</artifactId>
             <version>20240303</version>
         </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.21</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -40,10 +45,27 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
-                <configuration>
-                    <mainClass>reversesearch.Main</mainClass>
-                </configuration>
+                <executions>
+                    <execution>
+                        <!-- Default -->
+                        <id>default-cli</id>
+                        <configuration>
+                            <mainClass>reversesearch.Main</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Debug -->
+                        <id>debug</id>
+                        <configuration>
+                            <options>
+                                <option>-agentlib:jdwp=transport=dt_socket,server=n,address=localhost:8000,suspend=y</option>
+                            </options>
+                            <mainClass>reversesearch.Main</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
+
         </plugins>
 
     </build>

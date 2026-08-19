@@ -1,7 +1,7 @@
 package reversesearch.filehandler;
 
-import reversesearch.structure.doublylinkedlist.BufferedImageList;
+import reversesearch.structure.doublylinkedlist.HistogramList;
 
 public abstract class Loader {
-    public abstract BufferedImageList loadHistograms(String path);
+    public abstract HistogramList loadHistograms(String path, int binQuantity);
 }

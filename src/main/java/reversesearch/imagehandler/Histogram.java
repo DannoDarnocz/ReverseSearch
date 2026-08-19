@@ -2,55 +2,32 @@ package reversesearch.imagehandler;
 
 import reversesearch.structure.DoubleVector;
 
-import java.awt.image.BufferedImage;
-
 public class Histogram {
-    DoubleVector vector;
-    BufferedImage bufferedImage; // a cual imagen esta asociado
-    int binQuantity; // espacios
+    private DoubleVector vector;
+    private ImageReference referencedImage; // a cual imagen esta asociado
+    private int binsPerColor; // espacios
 
-    public Histogram(BufferedImage image, int bins){
-        this.binQuantity = bins;
-        this.bufferedImage = image;
+    public Histogram(ImageReference referenced, int bins){
+        this.binsPerColor = bins;
+        this.referencedImage = referenced;
 
-        // primero calcular histograma normal con la cantidad de bins
-        vector = new DoubleVector(binQuantity);
+        // crear histograma (HistogramCalculator se encarga de llenar los espacios con los valores calculados en el momento)
 
-        int interval = 256/binQuantity; // cuantos valores que van en cada bin
+        // son 3 colores, cada uno con "n" cantidad de bins, hay que almacenar todas las posibles combinaciones
+        // de esos 3 colores para esa "n" cantidad de bins por lo que es "n" a la 3
+        int histogramBins = (int)Math.pow(binsPerColor,3);
 
-        for(int row=0;row<image.getHeight();row++){
-            for(int column=0;column<image.getWidth();column++){
-                // desempaquetar colores con el RGB entero que representa el color
-                int currentRGB = bufferedImage.getRGB(row,column);
+        vector = new DoubleVector(histogramBins);
 
-                // poner los bits que corresponden a cada color haciendo bitshifting poniendo lso
-                // bits que nos interesan en los últimos 8 bits
-                // 8 bits de alfa, 8 de red, 8 de green, 8 de blue
-                // hacer "and" de 0xFF hace que los ultimos 8 bits sean 1, poniendo el resto en 0
-                int red = (currentRGB >> 16) & 0xFF;
-                int green = (currentRGB >> 8)  & 0xFF;
-                int blue =  currentRGB       & 0xFF;
-
-                // obtener el bin al que pertenece cada color por individual
-                int redBin = Math.min(red / interval, binQuantity-1);
-                int greenBin = Math.min(green / interval, binQuantity-1);
-                int blueBin = Math.min(blue / interval, binQuantity-1);
-
-                // usar formula para obtener el valor caracteristico del pixel (bin general)
-                int overallBin = (int) (redBin * Math.pow(binQuantity,2)+greenBin*binQuantity+blueBin);
-
-                vector.sumIndex(overallBin); // sumarle uno a ese bin "general" para ese pixel
-            }
-        }
-
-        // normalizar histograma
-        int imageDimensions = image.getWidth()*image.getHeight();
-        vector.normalizeAll(imageDimensions);
     }
 
     public double getBin(int i){
         return vector.getAt(i);
     }
+    public void sumBin(int i){vector.sumIndex(i);}
+    public void normalize(int dimensions){vector.normalizeAll(dimensions);}
 
-    public int binQuantity() {return binQuantity;}
+    public int binQuantity() {return binsPerColor;}
+    public ImageReference getReferencedImage(){return referencedImage;}
+    public int getBinsPerColor(){return binsPerColor;}
 }
