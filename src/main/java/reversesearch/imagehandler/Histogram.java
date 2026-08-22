@@ -30,4 +30,5 @@ public class Histogram {
     public int binQuantity() {return binsPerColor;}
     public ImageReference getReferencedImage(){return referencedImage;}
     public int getBinsPerColor(){return binsPerColor;}
+    public int getTotalBins(){return (int)Math.pow(binsPerColor,3);}
 }
