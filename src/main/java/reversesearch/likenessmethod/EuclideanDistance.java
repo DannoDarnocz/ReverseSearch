@@ -10,14 +10,14 @@ public class EuclideanDistance extends LikenessMethod {
         double result = 0;
 
         // verificar que tengan la misma cantidad de bins, por si acaso
-        if(histogram1.binQuantity()!=histogram2.binQuantity()){
+        if(histogram1.getTotalBins()!=histogram2.getTotalBins()){
             throw new InvalidParameterException("La cantidad de bins de los histogramas es diferente.");
         }
 
         double sum = 0;
 
         // sumatoria de (pi-qi) a la 2
-        for(int i=0;i<histogram1.binQuantity();i++){
+        for(int i=0;i<histogram1.getTotalBins();i++){
             double currentBin1 = histogram1.getBin(i);
             double currentBin2 = histogram2.getBin(i);
             sum+=Math.pow(currentBin1-currentBin2,2);
