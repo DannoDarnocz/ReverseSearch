@@ -31,4 +31,11 @@ public class Histogram {
     public ImageReference getReferencedImage(){return referencedImage;}
     public int getBinsPerColor(){return binsPerColor;}
     public int getTotalBins(){return (int)Math.pow(binsPerColor,3);}
+
+    //metodo para usar en binarysave
+    public String getImagePath(){return referencedImage.getPath();}
+    //metodo para binaryLoader
+    public void setBin(int i, double value){
+        vector.setAt(i, value);
+    }
 }

@@ -1,34 +1,36 @@
-/*package reversesearch.filehandler;
+package reversesearch.filehandler;
 
-import reversesearch.structure.doublylinkedlist.ImageReferenceList;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import reversesearch.structure.doublylinkedlist.HistogramList;
+import reversesearch.imagehandler.Histogram;
+import reversesearch.imagehandler.ImageReference;
 
 public class BinaryLoader extends Loader {
-    // singleton
-    private static BinaryLoader instance = new BinaryLoader();
-
-    private BinaryLoader() {}
-
-    public static BinaryLoader getInstance() {
-        return instance;
-    }
-
     @Override
-    public HistogramList loadHistograms(String path) {
+    public HistogramList loadHistograms(String path, int binQuantity) {
+        try (DataInputStream in = new DataInputStream(new FileInputStream(path))) {
+            HistogramList histograms = new HistogramList();
+            int total = in.readInt();
+            for (int j = 0; j < total; j++) {
+                String imagePath = in.readUTF();
+                int binsPerColor = in.readInt();
+                ImageReference ref = new ImageReference(imagePath, null); // sin miniatura: no se guarda en el archivo binario, solo ruta y vector
+                //validar con if(thumbnail != null) antes de usar getThumbnail()
 
-        File inputFile = new File(path); // abrir imagen
-        try (Scanner myReader = new Scanner(inputFile)) {
-            ImageReferenceList newList = new ImageReferenceList();
-            //newList.addStart(current); // añadir al inicio porque es mas rapido
-        } catch (FileNotFoundException e) {
-            System.out.println("Ha ocurrido un error al abrir el archivo binario de histogramas.");
+                Histogram histogram = new Histogram(ref, binsPerColor);
+                for (int i = 0; i < histogram.getTotalBins(); i++) {
+                    double value = in.readDouble();
+                    histogram.setBin(i, value);
+                }
+                histograms.addEnd(histogram);
+            }
+            return histograms;
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return new ImageReferenceList();
+        return null;
     }
 }
-*/

@@ -6,14 +6,14 @@ public class ListIterator<T> {
     ListIterator(DoublyLinkedNode first) {
         current = first;
     }
-boolean hasNext() {
+public boolean hasNext() {
     if(current != null){
         return true;
     }else{
         return false;
     }
 }
-T next() {
+public T next() {
     T result = current.getContent();
     current = current.getNext();
 return result;
