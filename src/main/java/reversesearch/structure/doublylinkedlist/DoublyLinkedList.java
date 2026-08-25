@@ -95,9 +95,9 @@ public class DoublyLinkedList<T> {// cualquier numero
     public ListIterator<T> getIterador() {
         return new ListIterator<T>(first);
     }
-
-
-// no lo implemente
+    public DoublyLinkedNode<T> getLast() {return last;}
+    public DoublyLinkedNode<T> getFirst() {return first;}
+    // no lo implemente
     //el algoritmo de ordenamiento es mejor en otra clase
     /*public void addOrdered(int num){
         if(first==null||num <  first.getContent()){

@@ -15,6 +15,6 @@ public class ImageReference {
         this.thumbnail = thumbnail;
     }
 
-    String getPath(){return path;}
-    BufferedImage getThumbnail() {return thumbnail;}
+    public String getPath(){return path;}
+    public BufferedImage getThumbnail() {return thumbnail;}
 }
