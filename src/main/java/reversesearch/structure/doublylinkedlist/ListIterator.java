@@ -13,9 +13,16 @@ public boolean hasNext() {
         return false;
     }
 }
-public T next() {
-    T result = current.getContent();
-    current = current.getNext();
-return result;
+public ListIterator<T>  getNext() {
+    if(current.getNext() == null) return null;
+    return new ListIterator(current.getNext());
+}
+
+public T getContent(){
+    return current.getContent();
+}
+
+public void setContent(T value){
+    current.setContent(value);
 }
 }

@@ -2,6 +2,7 @@ package reversesearch.ui;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import reversesearch.filehandler.PromptFileExplorer;
+import reversesearch.imagehandler.HistogramCalculator;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,6 @@ public class MainController {
 
     @FXML
     Button btnSearch;
-
     private  BufferedImage target; // imagen a buscar
 
     @FXML
@@ -43,7 +43,7 @@ public class MainController {
 
                 } catch (IOException e) {
                     // todo: ver que hacer con excepciones
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         });
