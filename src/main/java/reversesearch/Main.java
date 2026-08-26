@@ -6,10 +6,11 @@ import javafx.scene.Parent; // pantallas hijas que se abren sobre la principal e
 import javafx.scene.Scene; // movernos entre pantallas
 import javafx.stage.Stage; // escenario sobre el que ocurren las escenas
 
+
 // heredar de aplicación (runnable class)
 public class Main extends Application {
-    @Override // sobrecargar metodo que levanta la aplicacion
 
+    @Override // sobrecargar metodo que levanta la aplicacion
     // parametro es el escenario principal
     // siempre hay que tirar excepcion cuando es codigo externo al de nosotros
     public void start(Stage escenarioPrincipal) throws Exception{

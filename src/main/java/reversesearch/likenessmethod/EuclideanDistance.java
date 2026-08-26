@@ -4,7 +4,7 @@ import reversesearch.imagehandler.Histogram;
 
 import java.security.InvalidParameterException;
 
-public class EuclideanDistance extends LikenessMethod {
+public class EuclideanDistance implements LikenessMethod {
     @Override
     public double compare(Histogram histogram1, Histogram histogram2) {
         double result = 0;

@@ -11,10 +11,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import reversesearch.Main;
 import reversesearch.filehandler.FolderLoader;
 import reversesearch.filehandler.Loader;
 import reversesearch.filehandler.PromptFileExplorer;
-import reversesearch.structure.doublylinkedlist.HistogramList;
+import reversesearch.imagehandler.Histogram;
+import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 import reversesearch.structure.doublylinkedlist.ImageReferenceList;
 
 import java.io.File;
@@ -27,6 +29,9 @@ public class DatabaseSelectController {
     @FXML private Button btnLoadFolder;
     @FXML private Button btnLoadBinary;
 
+    public static DoublyLinkedList<Histogram> loadedHistograms;
+    public static int binsPerColor;
+
     @FXML
     private void initialize(){
         btnLoadFolder.setOnAction(event->{
@@ -34,8 +39,7 @@ public class DatabaseSelectController {
             File selectedDirectory = PromptFileExplorer.openDirectoryDialog(event);
 
             // obtener el valor que el usuario dio para el bin quantity para cada coor
-            int binsPerColor = (int)Math.pow(2,sldBinQuantity.getValue());
-            System.out.println(binsPerColor);
+            this.binsPerColor = (int)Math.pow(2,sldBinQuantity.getValue());
 
             if(selectedDirectory!=null){
                 // mostrar un mensaje de cargar imagenes
@@ -46,9 +50,9 @@ public class DatabaseSelectController {
 
                 // cargar las imágenes en paralelo porque sino se congela el sistema y no muestra el cuadro de mensaje
                 // de que esta cargando
-                Task<HistogramList> loadTask = new Task<>() {
+                Task<DoublyLinkedList<Histogram> > loadTask = new Task<>() {
                     @Override
-                    protected HistogramList call() throws Exception {
+                    protected DoublyLinkedList<Histogram>  call() throws Exception {
                         Loader loader = FolderLoader.getInstance();
                         return loader.loadHistograms(selectedDirectory.getAbsolutePath(),binsPerColor);
                     }
@@ -57,10 +61,11 @@ public class DatabaseSelectController {
                 // si se carga correctamente entonces avanzar a la siguiente
                 loadTask.setOnSucceeded(e -> {
                     loadingAlert.hide();
-                    cambiarPantalla(event, "main.fxml");
 
                     // ver si se encontraron imagenes validas
                     if(loadTask!=null){
+                        // obtener lista cargada desde el task
+                        loadedHistograms = loadTask.getValue();
                         cambiarPantalla(event, "main.fxml");
                     }
                     else{

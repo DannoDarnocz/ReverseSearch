@@ -4,7 +4,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import reversesearch.imagehandler.Histogram;
 import reversesearch.imagehandler.HistogramCalculator;
 import reversesearch.imagehandler.ImageReference;
-import reversesearch.structure.doublylinkedlist.HistogramList;
+import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 import reversesearch.structure.doublylinkedlist.ImageReferenceList;
 
 import java.awt.image.BufferedImage;
@@ -39,8 +39,8 @@ public class FolderLoader extends Loader {
 
 
     @Override
-    public HistogramList loadHistograms(String path, int binQuantity) {
-        HistogramList loadedList = new HistogramList();
+    public DoublyLinkedList<Histogram> loadHistograms(String path, int binQuantity) {
+        DoublyLinkedList<Histogram>  loadedList = new DoublyLinkedList<Histogram> ();
         File directory = new File(path);
 
         if (!directory.isDirectory()) return null;
@@ -56,6 +56,8 @@ public class FolderLoader extends Loader {
                 BufferedImage thumb = Thumbnails.of(f).size(160, 160).asBufferedImage();
                 ImageReference ref = new ImageReference(f.getAbsolutePath(), thumb);
                 Histogram histogram = new Histogram(ref, binQuantity);
+
+                System.out.println(histogram.getBinsPerColor());
                 histogram = HistogramCalculator.calculateNormalized(histogram);
                 loadedList.addStart(histogram);
             } catch (IOException e) {

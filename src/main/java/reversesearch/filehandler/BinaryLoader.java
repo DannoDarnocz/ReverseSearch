@@ -3,15 +3,16 @@ package reversesearch.filehandler;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import reversesearch.structure.doublylinkedlist.HistogramList;
+
+import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 import reversesearch.imagehandler.Histogram;
 import reversesearch.imagehandler.ImageReference;
 
 public class BinaryLoader extends Loader {
     @Override
-    public HistogramList loadHistograms(String path, int binQuantity) {
+    public DoublyLinkedList<Histogram> loadHistograms(String path, int binQuantity) {
         try (DataInputStream in = new DataInputStream(new FileInputStream(path))) {
-            HistogramList histograms = new HistogramList();
+            DoublyLinkedList<Histogram>  histograms = new DoublyLinkedList<Histogram> ();
             int total = in.readInt();
             for (int j = 0; j < total; j++) {
                 String imagePath = in.readUTF();
