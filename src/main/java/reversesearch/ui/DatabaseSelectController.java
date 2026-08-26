@@ -1,5 +1,6 @@
 package reversesearch.ui;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,13 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import reversesearch.Main;
 import reversesearch.filehandler.FolderLoader;
 import reversesearch.filehandler.Loader;
 import reversesearch.filehandler.PromptFileExplorer;
 import reversesearch.imagehandler.Histogram;
 import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
-import reversesearch.structure.doublylinkedlist.ImageReferenceList;
 
 import java.io.File;
 
@@ -29,8 +28,7 @@ public class DatabaseSelectController {
     @FXML private Button btnLoadFolder;
     @FXML private Button btnLoadBinary;
 
-    public static DoublyLinkedList<Histogram> loadedHistograms;
-    public static int binsPerColor;
+
 
     @FXML
     private void initialize(){
@@ -39,13 +37,13 @@ public class DatabaseSelectController {
             File selectedDirectory = PromptFileExplorer.openDirectoryDialog(event);
 
             // obtener el valor que el usuario dio para el bin quantity para cada coor
-            this.binsPerColor = (int)Math.pow(2,sldBinQuantity.getValue());
+            LoadedData.binsPerColor = (int)Math.pow(2,sldBinQuantity.getValue());
 
             if(selectedDirectory!=null){
                 // mostrar un mensaje de cargar imagenes
                 Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
-                loadingAlert.setHeaderText("Cargando imágenes...");
-                loadingAlert.setContentText("Este proceso puede durar algunos minutos.");
+                loadingAlert.setHeaderText("Procesando imágenes...");
+                loadingAlert.setContentText("Este proceso puede tardar algunos minutos.");
                 loadingAlert.show();
 
                 // cargar las imágenes en paralelo porque sino se congela el sistema y no muestra el cuadro de mensaje
@@ -54,22 +52,21 @@ public class DatabaseSelectController {
                     @Override
                     protected DoublyLinkedList<Histogram>  call() throws Exception {
                         Loader loader = FolderLoader.getInstance();
-                        return loader.loadHistograms(selectedDirectory.getAbsolutePath(),binsPerColor);
+                        return loader.loadHistograms(selectedDirectory.getAbsolutePath(),LoadedData.binsPerColor);
                     }
                 };
 
                 // si se carga correctamente entonces avanzar a la siguiente
                 loadTask.setOnSucceeded(e -> {
-                    loadingAlert.hide();
+                    loadingAlert.close();
 
                     // ver si se encontraron imagenes validas
                     if(loadTask!=null){
                         // obtener lista cargada desde el task
-                        loadedHistograms = loadTask.getValue();
-                        cambiarPantalla(event, "main.fxml");
+                        LoadedData.loadedHistograms = loadTask.getValue();
+                        cambiarPantalla(event, "main.fxml",600,750,false);
                     }
                     else{
-
                         // mostrar un mensaje de error
                         Alert noImageAlert = new Alert(Alert.AlertType.ERROR);
                         loadingAlert.setHeaderText("Error:");
@@ -79,7 +76,7 @@ public class DatabaseSelectController {
 
                 // sino mostrar error y no avanzar
                 loadTask.setOnFailed(e -> {
-                    loadingAlert.hide();
+                    loadingAlert.close();
                     // mostrar un mensaje de error
                     Alert loadError = new Alert(Alert.AlertType.INFORMATION);
                     loadError.setHeaderText("Error:");
@@ -106,17 +103,29 @@ public class DatabaseSelectController {
     }
 
     // mala reutilización de codigo copiando y pegando, lo arreglaremos despues
-    private void cambiarPantalla(ActionEvent evento, String archivoFxml){
+    public static void cambiarPantalla(ActionEvent evento, String archivoFxml, double width, double height, boolean resizable){
         try{
             // cargar archivo pasado por parametro
-            Parent raiz = FXMLLoader.load(getClass().getResource(archivoFxml));
+            Parent raiz = FXMLLoader.load(DatabaseSelectController.class.getResource(archivoFxml));
             // cambiar el escenario a la siguiente ventana
             Stage stage=(Stage)((Node)evento.getSource()).getScene().getWindow();
             stage.getScene().setRoot(raiz); // devolver a la raiz al cerrarla
-            stage.sizeToScene();
+            stage.setResizable(resizable);
+
+            stage.setWidth(width);
+            stage.setHeight(height);
+            stage.setMinWidth(width);
+            stage.setMinHeight(height);
         } catch (Exception e){
             e.printStackTrace(); // imprimir en consola el errorr
         }
+    }
+
+    public static void showAlert(String title, String msg, Alert.AlertType type){
+        Alert alert = new Alert(type);
+        alert.setHeaderText(title);
+        alert.setContentText(msg);
+        alert.show();
     }
 
 

@@ -1,18 +1,25 @@
 package reversesearch.ui;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import net.coobird.thumbnailator.Thumbnails;
 import reversesearch.filehandler.BinarySaver;
 import reversesearch.filehandler.PromptFileExplorer;
+import reversesearch.imagehandler.ImageConvert;
 import reversesearch.imagehandler.ImageReference;
+import reversesearch.imagehandler.ImageSeeker;
 import reversesearch.likenessmethod.SimilarityCalculator;
 import reversesearch.likenessmethod.SimilarityResult;
-import reversesearch.structure.doublylinkedlist.BubbleSort;
-import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
-import reversesearch.structure.doublylinkedlist.MergeSort;
-import reversesearch.structure.doublylinkedlist.SortMethod;
+import reversesearch.structure.Clock;
+import reversesearch.structure.doublylinkedlist.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -40,16 +47,28 @@ public class MainController {
     TextField txtOrderTime;
     @FXML
     TextField txtComparisonTime;
+
+    @FXML
+    TilePane tilePaneResults;
+
+    @FXML
+    Label lblLoadedImages;
+
     private ImageReference target; // imagen a buscar
+
 
 
     @FXML
     private void initialize(){
        this.target = null; // no se ha seleccionado imagen
 
+        // poner cantidad de imagenes cargadas de la base de datos
+        lblLoadedImages.setText(Integer.toString(LoadedData.loadedHistograms.size()));
+
+
         // setear opciones de choiceboxes
         chbSortMethod.getItems().addAll("Bubble","Merge");
-        chbLikenessMethod.getItems().addAll("Similitud coseno","Similitud euclidiana","Intersección de histogramas");
+        chbLikenessMethod.getItems().addAll("Similitud coseno","Distancia euclidiana","Intersección de histogramas");
 
         btnSaveBinary.setOnAction(event -> {
             // pedir donde guardar
@@ -57,7 +76,7 @@ public class MainController {
             File selectedDirectory = fileChooser.showSaveDialog(((Node)event.getSource()).getScene().getWindow());
 
             BinarySaver.saver(
-                    DatabaseSelectController.loadedHistograms,
+                    LoadedData.loadedHistograms,
                     selectedDirectory.getAbsolutePath()
             );
         });
@@ -73,7 +92,6 @@ public class MainController {
                     target = new ImageReference(selectedFile.getAbsolutePath(), thumb);
 
                 } catch (IOException e) {
-                    // todo: ver que hacer con excepciones
                     e.printStackTrace();
                 }
             }
@@ -92,63 +110,102 @@ public class MainController {
                 String likenessMethodStr = chbLikenessMethod.getValue().toString();
                 String sortMethodStr = chbSortMethod.getValue().toString();
 
-                // mostrar un mensaje de cargar imagenes
-                Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
-                loadingAlert.setHeaderText(null);
-                loadingAlert.setContentText("Triangulando...");
-                loadingAlert.show();
-
                     try{
 
                         // ---- COMPARASION
 
                         // contar tiempo
-                        Instant startComparison = Instant.now();
+                        Clock comparisonClock = new Clock();
+                        comparisonClock.start();
 
                         // obtener los resultados
                         DoublyLinkedList<SimilarityResult> results = SimilarityCalculator.calculate(
                                 target,
-                                DatabaseSelectController.loadedHistograms,
+                                LoadedData.loadedHistograms,
                                 likenessMethodStr,
-                                DatabaseSelectController.binsPerColor
+                                LoadedData.binsPerColor
                         );
 
-                        // parar contador
-                        Instant finishComparison = Instant.now();
+                        // poner la hora de finalizacion
+                        comparisonClock.end();
 
-                        // Calcular tiempo de duracion
-                        long timeElapsed = Duration.between(startComparison, finishComparison).toSeconds();
-
-                        // mostrar
-                        txtComparisonTime.setText(Long.toString(timeElapsed));
+                        // mostrar en milisegundos
+                        txtComparisonTime.setText(Long.toString(comparisonClock.getMilliseconds()));
 
                         // --- ORDENAMIENTO
                         // ordenar segun metodo
 
                         SortMethod sort;
                         // todo: arreglar factory para sort?
-                        if(sortMethodStr=="Merge"){
+                        // todo: ARREGLAR ESTA COSAAAA
+                        if(sortMethodStr.equals("Merge")){
                             sort = new MergeSort();
                         }else{
                             sort = new BubbleSort();
                         }
 
-                        // iniciar contador
-                        Instant startSort = Instant.now();
+
+                        // contar tiempo
+                        Clock sortClock = new Clock();
+                        sortClock.start();
 
                         // ordenar
                         sort.sort(results);
 
                         // parar contador
-                        Instant finishSort = Instant.now();
+                        sortClock.end();
 
-                        // Calcular tiempo de duracion
-                        long timeElapsedSort = Duration.between(startSort, finishSort).toSeconds();
+                        // mostrar en milisegundos
+                        txtOrderTime.setText(Long.toString(sortClock.getMilliseconds()));
 
-                        // mostrar
-                        txtOrderTime.setText(Long.toString(timeElapsedSort));
 
-                        loadingAlert.hide();
+                        tilePaneResults.getChildren().clear(); // limpiar lo que haya en los resultados
+
+                        // mostrar las miniaturas de las imagenes una por una, las primeras 50 únicamente
+                        ListIterator<SimilarityResult> it = results.getIterador();
+                        for (int i=0;i<50;i++) {
+                            if(!it.hasNext()) break; // ya no hay mas imagenes
+                            it=it.getNext();
+                            SimilarityResult currentResult = it.getContent();
+                            ImageReference currentReferences = currentResult.getImageReference();
+                            BufferedImage currentThumb = currentReferences.getThumbnail();
+
+                            System.out.println("actual: " + currentResult.getLikenessValue());
+
+                            // convertir thumbnail a Image desde bytes porque es buffered
+                            Image thumbImage = ImageConvert.fromBuffered(currentThumb);
+
+                            ImageView currentImageView = new ImageView(thumbImage);
+                            // vista de la miniatura para cada uno
+                            currentImageView.setFitWidth(120);
+                            currentImageView.setFitHeight(120);
+                            currentImageView.setPreserveRatio(true);
+                            currentImageView.setCursor(Cursor.HAND);
+
+                            // cuando el usuario le da click a la miniatura que estamos construyendo
+                            currentImageView.setOnMouseClicked(e -> {
+                                try {
+                                    // buscar la imagen completa
+                                    BufferedImage fullBuffered = ImageSeeker.bufferedFromReference(currentReferences);
+                                    // la convierte a Image para poder mostrarse
+                                    Image fullImage = ImageConvert.fromBuffered(fullBuffered);
+                                    ImageView fullView = new ImageView(fullImage);
+
+                                    // configurar que se vea bien
+                                    fullView.setPreserveRatio(true);
+                                    fullView.setFitWidth(800);
+
+                                    // montar nueva ventana para verla completa
+                                    Stage popup = new Stage();
+                                    popup.setScene(new Scene(new StackPane(fullView)));
+                                    popup.show();
+                                } catch (IOException e2) {
+                                    e2.printStackTrace();
+                                }
+                            });
+
+                            tilePaneResults.getChildren().add(currentImageView);
+                        }
 
 
                     } catch (Exception e) {

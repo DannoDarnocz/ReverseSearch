@@ -7,20 +7,35 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reversesearch.ui.DatabaseSelectController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="443.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="reversesearch.ui.DatabaseSelectController">
    <children>
-      <Button fx:id="btnLoadBinary" layoutX="254.0" layoutY="306.0" mnemonicParsing="false" text="Cargar binario" />
-      <Button fx:id="btnLoadFolder" layoutX="254.0" layoutY="200.0" mnemonicParsing="false" text="Cargar carpeta" />
-      <Label alignment="CENTER" layoutX="201.0" layoutY="58.0" prefHeight="17.0" prefWidth="197.0" text="Seleccionar base de imagenes">
+      <Button fx:id="btnLoadBinary" layoutX="412.0" layoutY="333.0" mnemonicParsing="false" text="Cargar binario" />
+      <Button fx:id="btnLoadFolder" layoutX="89.0" layoutY="333.0" mnemonicParsing="false" text="Seleccionar carpeta" />
+      <Label alignment="CENTER" layoutX="194.0" layoutY="81.0" prefHeight="17.0" prefWidth="197.0" text="Seleccionar base de imágenes">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutX="123.0" layoutY="89.0" prefHeight="71.0" prefWidth="354.0" text="Puede seleccionar la carpeta de imagenes directamente o cargar un binario previamente generado por el programa" textAlignment="CENTER" wrapText="true" />
-      <Slider fx:id="sldBinQuantity" blockIncrement="1.0" layoutX="328.0" layoutY="233.0" majorTickUnit="1.0" max="8.0" min="2.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="2.0" />
-      <Label fx:id="lblBinQuantity" layoutX="94.0" layoutY="233.0" text="Cantidad de Bins para cada color (2^n)" />
-      <Label alignment="CENTER" layoutX="140.0" layoutY="341.0" prefHeight="45.0" prefWidth="321.0" text="(Esto cargará los histogramas con la cantidad de bins que haya seleccionado en el momento)" textAlignment="CENTER" wrapText="true" />
-      <Separator layoutX="26.0" layoutY="267.0" prefHeight="11.0" prefWidth="549.0" />
-      <Separator layoutX="6.0" layoutY="168.0" prefHeight="11.0" prefWidth="572.0" />
+      <Label alignment="CENTER" layoutX="123.0" layoutY="98.0" prefHeight="71.0" prefWidth="354.0" text="Puede seleccionar la base de imágenes como una carpeta directamente o cargar un binario previamente generado por el programa. Mayor cantidad de bins, mayor precisión pero mayor procesamiento requerido." textAlignment="CENTER" wrapText="true" />
+      <Slider fx:id="sldBinQuantity" blockIncrement="1.0" layoutX="79.0" layoutY="285.0" majorTickUnit="1.0" max="8.0" min="2.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
+      <Label fx:id="lblBinQuantity" layoutX="95.0" layoutY="261.0" text="Bins por color (2^n)" />
+      <Label alignment="CENTER" layoutX="350.0" layoutY="246.0" prefHeight="79.0" prefWidth="215.0" text="(Esto cargará los histogramas con la cantidad de bins que haya seleccionado en el momento)" textAlignment="CENTER" wrapText="true" />
+      <Separator layoutX="14.0" layoutY="184.0" prefHeight="11.0" prefWidth="572.0" />
+      <Label alignment="CENTER" layoutX="51.0" layoutY="222.0" prefHeight="17.0" prefWidth="197.0" text="Cargar carpeta">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="359.0" layoutY="222.0" prefHeight="17.0" prefWidth="197.0" text="Cargar binario">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTitle" alignment="CENTER" layoutX="155.0" layoutY="34.0" prefHeight="38.0" prefWidth="290.0" text="REVERSE SEARCH">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+      <Separator layoutX="298.0" layoutY="211.0" orientation="VERTICAL" prefHeight="200.0" />
    </children>
 </Pane>

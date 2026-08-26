@@ -12,7 +12,7 @@ public class BubbleSort implements SortMethod {
         boolean swapped;
 
         ListIterator<SimilarityResult> current= list.getIterador();
-        while(current.hasNext()){
+        while(current.hasNext() ){
             ListIterator<SimilarityResult> nextNode = current.getNext();
             if (current.getContent().compareTo(nextNode.getContent()) > 0) {
                 // intercambiar valores
@@ -21,6 +21,8 @@ public class BubbleSort implements SortMethod {
                 nextNode.setContent(temp);
                 swapped = true;
             }
+            // obtener siguiente
+            current = nextNode;
         }
 
         while (current != null && current.getNext() != null) {

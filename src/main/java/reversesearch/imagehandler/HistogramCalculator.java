@@ -36,15 +36,14 @@ public class HistogramCalculator {
                     // usar formula para obtener el valor caracteristico del pixel (bin general)
                     int overallBin = (int) (redBin * Math.pow(binQuantity, 2) + greenBin * binQuantity + blueBin);
 
-                    // normalizar histograma con la dimension de la misma
-                    int imageDimensions = bufferedImage.getWidth() * bufferedImage.getHeight();
-                    histogram.normalize(imageDimensions);
-
                     histogram.sumBin(overallBin); // sumarle uno a ese bin "general" para ese pixel
-
-
                 }
             }
+            // normalizar histograma con la dimension de la misma
+            int imageDimensions = bufferedImage.getWidth() * bufferedImage.getHeight();
+            histogram.normalize(imageDimensions);
+
+
             // retornar por si acaso aunque modifica directamente el histograma
             return histogram;
         } catch (Exception e) {

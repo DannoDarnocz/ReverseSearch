@@ -32,7 +32,7 @@ public class SimilarityCalculator {
             it=it.getNext();
         }
 
-        System.out.println("finished");
+        System.out.println("finished similarity");
         return results;
     }
 }

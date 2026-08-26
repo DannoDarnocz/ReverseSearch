@@ -25,6 +25,10 @@ public class PromptFileExplorer {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Abrir archivo");
 
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*."+type)
+        );
+
         // abrir dialogo y retornar resultado (null si canceló)
         return fileChooser.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
     }
