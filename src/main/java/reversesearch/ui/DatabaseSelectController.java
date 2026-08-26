@@ -86,8 +86,17 @@ public class DatabaseSelectController {
                 });
 
                 // ejecutar la tarea de cargar
-                new Thread(loadTask).start();
-
+                try{
+                    new Thread(loadTask).start();
+                } catch (OutOfMemoryError e) {
+                    loadingAlert.close();
+                    e.printStackTrace();
+                    showAlert("Error","No hay suficiente espacio en memoria para almacenar los histogramas con la cantidad de bins por color especificado.", Alert.AlertType.ERROR);
+                }catch (Exception e) {
+                    loadingAlert.close();
+                    e.printStackTrace();
+                    showAlert("Error","Se ha producido un error al cargar las imágenes.", Alert.AlertType.ERROR);
+                }
 
             }
 

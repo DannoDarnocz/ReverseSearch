@@ -19,7 +19,7 @@
       <Label alignment="CENTER" layoutX="123.0" layoutY="98.0" prefHeight="71.0" prefWidth="354.0" text="Puede seleccionar la base de imágenes como una carpeta directamente o cargar un binario previamente generado por el programa. Mayor cantidad de bins, mayor precisión pero mayor procesamiento requerido." textAlignment="CENTER" wrapText="true" />
       <Slider fx:id="sldBinQuantity" blockIncrement="1.0" layoutX="79.0" layoutY="285.0" majorTickUnit="1.0" max="8.0" min="2.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
       <Label fx:id="lblBinQuantity" layoutX="95.0" layoutY="261.0" text="Bins por color (2^n)" />
-      <Label alignment="CENTER" layoutX="350.0" layoutY="246.0" prefHeight="79.0" prefWidth="215.0" text="(Esto cargará los histogramas con la cantidad de bins que haya seleccionado en el momento)" textAlignment="CENTER" wrapText="true" />
+      <Label alignment="CENTER" layoutX="350.0" layoutY="246.0" prefHeight="79.0" prefWidth="215.0" text="(Esto cargará los histogramas con la cantidad de bins que haya seleccionado cuando se guardó)" textAlignment="CENTER" wrapText="true" />
       <Separator layoutX="14.0" layoutY="184.0" prefHeight="11.0" prefWidth="572.0" />
       <Label alignment="CENTER" layoutX="51.0" layoutY="222.0" prefHeight="17.0" prefWidth="197.0" text="Cargar carpeta">
          <font>
