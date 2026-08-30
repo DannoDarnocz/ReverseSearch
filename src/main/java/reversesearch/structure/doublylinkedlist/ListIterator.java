@@ -25,4 +25,10 @@ public T getContent(){
 public void setContent(T value){
     current.setContent(value);
 }
+//metodo que arregla el binarysaver
+    public T next() {
+        T result = current.getContent();
+        current = current.getNext();
+        return result;
+    }
 }
