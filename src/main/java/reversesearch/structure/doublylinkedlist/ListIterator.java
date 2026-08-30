@@ -7,7 +7,7 @@ public class ListIterator<T> {
         current = first;
     }
 public boolean hasNext() {
-    if(current != null){
+    if(current.getNext() != null){
         return true;
     }else{
         return false;

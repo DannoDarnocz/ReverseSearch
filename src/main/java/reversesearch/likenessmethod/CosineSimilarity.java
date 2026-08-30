@@ -4,7 +4,7 @@ import reversesearch.imagehandler.Histogram;
 
 import java.security.InvalidParameterException;
 
-public class CosineSimilarity extends LikenessMethod {
+public class CosineSimilarity implements LikenessMethod {
     @Override
     public double compare(Histogram A, Histogram B) {
         double result = 0;

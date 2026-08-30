@@ -3,7 +3,7 @@ package reversesearch.likenessmethod;
 public class LikenessMethodFactory {
     public static LikenessMethod getLikenessMethod(String methodName) {
         switch (methodName) {
-            case "Similitud euclidiana":
+            case "Distancia euclidiana":
                 return new EuclideanDistance();
             case "Intersección de histogramas":
                 return new HistogramIntersection();
