@@ -10,7 +10,7 @@ import reversesearch.imagehandler.ImageReference;
 
 public class BinaryLoader extends Loader {
     @Override
-    public DoublyLinkedList<Histogram> loadHistograms(String path, int binQuantity) {
+    public DoublyLinkedList<Histogram> loadHistograms(String path, int binQuantity) throws Exception {
         try (DataInputStream in = new DataInputStream(new FileInputStream(path))) {
             DoublyLinkedList<Histogram>  histograms = new DoublyLinkedList<Histogram> ();
             int total = in.readInt();
@@ -31,7 +31,7 @@ public class BinaryLoader extends Loader {
 
         } catch (IOException e) {
             e.printStackTrace();
+            throw e; // enviar de nuevo hacia arriba
         }
-        return null;
     }
 }
