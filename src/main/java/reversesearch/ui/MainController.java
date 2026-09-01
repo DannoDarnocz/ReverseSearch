@@ -73,16 +73,7 @@ public class MainController {
         btnSaveBinary.setOnAction(event -> {
             // pedir donde guardar
             FileChooser fileChooser = new FileChooser();
-
-            // poner cual es el tipo de archivo y un nombre generico.
-            fileChooser.setInitialFileName("database.bin");
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Archivo binario (*.bin)", "*.bin"),
-                    new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")
-            );
-
             File selectedDirectory = fileChooser.showSaveDialog(((Node)event.getSource()).getScene().getWindow());
-
 
             BinarySaver.saver(
                     LoadedData.loadedHistograms,
