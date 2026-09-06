@@ -15,6 +15,8 @@ public class BinaryLoader extends Loader {
             DoublyLinkedList<Histogram>  histograms = new DoublyLinkedList<Histogram> ();
             int total = in.readInt();
             for (int j = 0; j < total; j++) {
+                System.out.println("Leyendo un histograma desde el binario: "+j);
+
                 String imagePath = in.readUTF();
                 int binsPerColor = in.readInt();
                 ImageReference ref = new ImageReference(imagePath, null); // sin miniatura: no se guarda en el archivo binario, solo ruta y vector
@@ -22,11 +24,13 @@ public class BinaryLoader extends Loader {
 
                 Histogram histogram = new Histogram(ref, binsPerColor);
                 for (int i = 0; i < histogram.getTotalBins(); i++) {
-                    double value = in.readDouble();
+                    float value = in.readFloat();
                     histogram.setBin(i, value);
                 }
                 histograms.addEnd(histogram);
+
             }
+
             return histograms;
 
         } catch (IOException e) {

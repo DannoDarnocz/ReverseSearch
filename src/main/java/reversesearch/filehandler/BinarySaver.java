@@ -10,14 +10,17 @@ public class BinarySaver {
     public static boolean saver(DoublyLinkedList<Histogram> histograms, String path) {
         try (DataOutputStream out = new DataOutputStream(new FileOutputStream(path))) {
             out.writeInt(histograms.size());
+            int total = histograms.size();
+
             ListIterator<Histogram> iterator = histograms.getIterador();
-            while(iterator.hasNext()) {
+
+            // para asegurarse de que se escriba exactamente la cantidad se usa un iterador con contador
+            for (int i = 0; i < total; i++) {
                 Histogram current = iterator.next();
                 out.writeUTF(current.getImagePath());
                 out.writeInt(current.getBinsPerColor());
-
-                for (int i = 0; i < current.getTotalBins(); i++) {
-                    out.writeDouble(current.getBin(i));
+                for (int j = 0; j < current.getTotalBins(); j++) {
+                    out.writeFloat(current.getBin(j));
                 }
             }
             return true;

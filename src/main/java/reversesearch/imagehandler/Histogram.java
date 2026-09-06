@@ -1,9 +1,9 @@
 package reversesearch.imagehandler;
 
-import reversesearch.structure.DoubleVector;
+import reversesearch.structure.FloatVector;
 
 public class Histogram {
-    private DoubleVector vector;
+    private FloatVector vector;
     private ImageReference referencedImage; // a cual imagen esta asociado
     private int binsPerColor; // espacios
 
@@ -17,11 +17,11 @@ public class Histogram {
         // de esos 3 colores para esa "n" cantidad de bins por lo que es "n" a la 3
         int histogramBins = (int)Math.pow(binsPerColor,3);
 
-        vector = new DoubleVector(histogramBins);
+        vector = new FloatVector(histogramBins);
 
     }
 
-    public double getBin(int i){
+    public float getBin(int i){
         return vector.getAt(i);
     }
     public void sumBin(int i){vector.sumIndex(i);}
@@ -35,7 +35,7 @@ public class Histogram {
     //metodo para usar en binarysave
     public String getImagePath(){return referencedImage.getPath();}
     //metodo para binaryLoader
-    public void setBin(int i, double value){
+    public void setBin(int i, float value){
         vector.setAt(i, value);
     }
 }

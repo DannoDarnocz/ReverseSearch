@@ -7,7 +7,7 @@ import reversesearch.structure.doublylinkedlist.*;
 
 public class SimilarityCalculator {
     public static DoublyLinkedList<SimilarityResult> calculate(ImageReference target, DoublyLinkedList<Histogram>  databaseHistograms, String likenessMethodStr, int binQuantity){
-        // todo: poner binQuantity como variable global?
+
         LikenessMethod likenessMethod = LikenessMethodFactory.getLikenessMethod(likenessMethodStr);
 
 
