@@ -97,6 +97,11 @@ public class DoublyLinkedList<T> {// cualquier numero
     }
     public DoublyLinkedNode<T> getLast() {return last;}
     public DoublyLinkedNode<T> getFirst() {return first;}
+    public void clear(){
+        first = null;
+        last = null;
+        size = 0;
+    }
     // no lo implemente
     //el algoritmo de ordenamiento es mejor en otra clase
     /*public void addOrdered(int num){
