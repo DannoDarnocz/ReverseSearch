@@ -1,4 +1,4 @@
-package reversesearch.structure;
+package reversesearch.structure.vector;
 
 public class FloatVector {
     private int size;
@@ -26,7 +26,27 @@ public class FloatVector {
     }
 
     //metodo para binaryLoader
-    public void setAt(int i, float value) {
+    public void insertAt(int i, float value) {
         vector[i] = value;
+    }
+
+    public VectorIterator getIterator(){ return new VectorIterator();}
+
+    public int getSize() { return size;}
+
+    // clase interna para facil manejo del iterator
+    public class VectorIterator {
+        private int currentIndex = 0;
+
+        public boolean hasNext() {
+            return currentIndex < size;
+        }
+
+        public float getNext() {
+            if (!hasNext()) {
+                throw new java.util.NoSuchElementException("No hay más elementos en el vector.");
+            }
+            return vector[currentIndex++];
+        }
     }
 }

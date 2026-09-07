@@ -1,16 +1,13 @@
-package reversesearch.likenessmethod;
+package reversesearch.similarity;
 
 import reversesearch.imagehandler.Histogram;
 import reversesearch.imagehandler.HistogramCalculator;
 import reversesearch.imagehandler.ImageReference;
+import reversesearch.similarity.likenessmethods.LikenessMethod;
 import reversesearch.structure.doublylinkedlist.*;
 
 public class SimilarityCalculator {
-    public static DoublyLinkedList<SimilarityResult> calculate(ImageReference target, DoublyLinkedList<Histogram>  databaseHistograms, String likenessMethodStr, int binQuantity){
-
-        LikenessMethod likenessMethod = LikenessMethodFactory.getLikenessMethod(likenessMethodStr);
-
-
+    public static DoublyLinkedList<SimilarityResult> calculate(ImageReference target, DoublyLinkedList<Histogram>  databaseHistograms, LikenessMethod likenessMethod, int binQuantity){
         // calcular histograma para el target
         Histogram targetHistogram = new Histogram(target, binQuantity);
         HistogramCalculator.calculateNormalized(targetHistogram);
@@ -21,7 +18,7 @@ public class SimilarityCalculator {
 
         // iterar lista de histogramas
         ListIterator<Histogram> it = databaseHistograms.getIterador();
-        while(it.getNext()!=null){
+        while(it!=null){
             // comparar actual de la lista de histogramas con el target
             Histogram currentHistogram = it.getContent();
             double currentValue = likenessMethod.compare(currentHistogram,targetHistogram);
@@ -32,7 +29,6 @@ public class SimilarityCalculator {
             it=it.getNext();
         }
 
-        System.out.println("finished similarity");
         return results;
     }
 }

@@ -1,10 +1,12 @@
 package reversesearch.structure.doublylinkedlist;
 
-import reversesearch.likenessmethod.SimilarityResult;
+import reversesearch.similarity.SimilarityResult;
+
+import java.util.Comparator;
 
 public class BubbleSort implements SortMethod {
     @Override
-    public void sort(DoublyLinkedList<SimilarityResult> list) {
+    public void sort(DoublyLinkedList<SimilarityResult> list, Comparator<SimilarityResult> comparator) {
         if (list == null || list.size() <= 1) {
             return; // no ocupa ordenar
         }
@@ -14,7 +16,7 @@ public class BubbleSort implements SortMethod {
         ListIterator<SimilarityResult> current= list.getIterador();
         while(current.hasNext() ){
             ListIterator<SimilarityResult> nextNode = current.getNext();
-            if (current.getContent().compareTo(nextNode.getContent()) > 0) {
+            if (comparator.compare(current.getContent(), nextNode.getContent()) > 0) {
                 // intercambiar valores
                 SimilarityResult temp = current.getContent();
                 current.setContent(nextNode.getContent());
@@ -27,7 +29,7 @@ public class BubbleSort implements SortMethod {
 
         while (current != null && current.getNext() != null) {
             ListIterator<SimilarityResult>nextNode = current.getNext();
-            if (current.getContent().compareTo(nextNode.getContent()) > 0) {
+            if (comparator.compare(current.getContent(), nextNode.getContent()) > 0) {
                 // intercambiar valores
                 SimilarityResult temp = current.getContent();
                 current.setContent(nextNode.getContent());

@@ -1,6 +1,6 @@
 package reversesearch.imagehandler;
 
-import reversesearch.structure.FloatVector;
+import reversesearch.structure.vector.FloatVector;
 
 public class Histogram {
     private FloatVector vector;
@@ -36,6 +36,6 @@ public class Histogram {
     public String getImagePath(){return referencedImage.getPath();}
     //metodo para binaryLoader
     public void setBin(int i, float value){
-        vector.setAt(i, value);
+        vector.insertAt(i, value);
     }
 }

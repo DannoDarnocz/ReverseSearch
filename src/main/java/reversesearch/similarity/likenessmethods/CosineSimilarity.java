@@ -1,4 +1,4 @@
-package reversesearch.likenessmethod;
+package reversesearch.similarity.likenessmethods;
 
 import reversesearch.imagehandler.Histogram;
 

@@ -11,21 +11,23 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.coobird.thumbnailator.Thumbnails;
+import reversesearch.Utilities;
 import reversesearch.filehandler.BinarySaver;
 import reversesearch.filehandler.PromptFileExplorer;
 import reversesearch.imagehandler.ImageConvert;
 import reversesearch.imagehandler.ImageReference;
 import reversesearch.imagehandler.ImageSeeker;
-import reversesearch.likenessmethod.SimilarityCalculator;
-import reversesearch.likenessmethod.SimilarityResult;
+import reversesearch.similarity.SimilarityCalculator;
+import reversesearch.similarity.SimilarityResult;
+import reversesearch.similarity.families.SimilarityFamilyFactory;
+import reversesearch.similarity.likenessmethods.LikenessMethod;
 import reversesearch.structure.Clock;
 import reversesearch.structure.doublylinkedlist.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
+import java.util.Comparator;
 
 public class MainController {
     @FXML
@@ -70,6 +72,48 @@ public class MainController {
         chbSortMethod.getItems().addAll("Bubble","Merge");
         chbLikenessMethod.getItems().addAll("Similitud coseno","Distancia euclidiana","Intersección de histogramas");
 
+        /*
+        btnSaveBinary.setOnAction(event -> {
+            // pedir donde guardar
+            FileChooser fileChooser = new FileChooser();
+
+            // poner cual es el tipo de archivo y un nombre generico.
+            fileChooser.setInitialFileName("database.bin");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Archivo binario (*.bin)", "*.bin"),
+                    new FileChooser.ExtensionFilter("All Files (*.*)", "*.*")
+            );
+
+            File selectedDirectory = fileChooser.showSaveDialog(((Node)event.getSource()).getScene().getWindow());
+
+            if(selectedDirectory!=null){
+                Alert alert = Utilities.showAlert("Guardando a archivo binario","Este proceso puede tardar varios minutos.", Alert.AlertType.INFORMATION);
+
+                // hacer una funcion lambda que se puede ejecutar en paralelo porque sino el programa se congela y no
+                // muestra cuadro de infromacion
+                Runnable saveBinary = () -> {
+                    BinarySaver.saver(
+                            LoadedData.loadedHistograms,
+                            selectedDirectory.getAbsolutePath());
+                };
+
+
+                // crear el executor, y asignarle la tarea saveBinary
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+
+                // completablefuture permite ejecutar algo despues de que se completa la tarea de forma paralela
+                CompletableFuture.runAsync(saveBinary, executor)
+                        .thenRun(() -> {
+                            alert.hide(); // cerrar ventana automaticamente
+                        });
+
+                executor.shutdown(); // una vez que termine, apagar el executor
+            }
+
+
+        });*/
+        btnSearch.setDisable(true);
+
         btnSaveBinary.setOnAction(event -> {
             // pedir donde guardar
             FileChooser fileChooser = new FileChooser();
@@ -90,6 +134,7 @@ public class MainController {
             );
         });
 
+
         btnUpload.setOnAction(event -> {
             // pedir abrir archivo tipo png
             File selectedFile = PromptFileExplorer.openFileDialog(event,"png");
@@ -100,6 +145,7 @@ public class MainController {
                     BufferedImage thumb = Thumbnails.of(selectedFile).size(160, 160).asBufferedImage();
                     target = new ImageReference(selectedFile.getAbsolutePath(), thumb);
 
+                    btnSearch.setDisable(false); // ya hay imagen con la cual comparar
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -108,18 +154,15 @@ public class MainController {
 
         btnSearch.setOnAction(event -> {
             if(target==null){
-                // mostrar un mensaje de cargar imagenes
-                Alert loadingAlert = new Alert(Alert.AlertType.ERROR);
-                loadingAlert.setHeaderText(null);
-                loadingAlert.setContentText("Primero debe de subir la imagen a buscar.");
-
-                // mostrar alerta
-                loadingAlert.show();
+                Utilities.showAlert("Error","Primero debe de subir la imagen a buscar", Alert.AlertType.ERROR);
             }else{
                 String likenessMethodStr = chbLikenessMethod.getValue().toString();
                 String sortMethodStr = chbSortMethod.getValue().toString();
 
                     try{
+                        SimilarityFamilyFactory family = SimilarityFamilyFactory.getFactory(likenessMethodStr);
+                        LikenessMethod likenessMethod = family.createLikenessMethod(); // metodo de comparacion
+                        Comparator<SimilarityResult> comparator = family.createComparator(); // ordenamiento descendente o ascendente
 
                         // ---- COMPARASION
 
@@ -131,7 +174,7 @@ public class MainController {
                         DoublyLinkedList<SimilarityResult> results = SimilarityCalculator.calculate(
                                 target,
                                 LoadedData.loadedHistograms,
-                                likenessMethodStr,
+                                likenessMethod,
                                 LoadedData.binsPerColor
                         );
 
@@ -145,8 +188,6 @@ public class MainController {
                         // ordenar segun metodo
 
                         SortMethod sort;
-                        // todo: arreglar factory para sort?
-                        // todo: ARREGLAR ESTA COSAAAA
                         if(sortMethodStr.equals("Merge")){
                             sort = new MergeSort();
                         }else{
@@ -159,7 +200,9 @@ public class MainController {
                         sortClock.start();
 
                         // ordenar
-                        sort.sort(results);
+                        //ordenar de acuerdo que significa ser mas similar en el likeness method
+                        // el de distancia euclidiana es de menor a mayor pero el resto es de mayor a menor, de eso se encarga el factory
+                        sort.sort(results, comparator);
 
                         // parar contador
                         sortClock.end();
@@ -173,13 +216,10 @@ public class MainController {
                         // mostrar las miniaturas de las imagenes una por una, las primeras 50 únicamente
                         ListIterator<SimilarityResult> it = results.getIterador();
                         for (int i=0;i<50;i++) {
-                            if(!it.hasNext()) break; // ya no hay mas imagenes
-                            it=it.getNext();
+                            if(it==null) break;
                             SimilarityResult currentResult = it.getContent();
                             ImageReference currentReferences = currentResult.getImageReference();
                             BufferedImage currentThumb = currentReferences.getThumbnail();
-
-                            System.out.println("actual: " + currentResult.getLikenessValue());
 
                             // convertir thumbnail a Image desde bytes porque es buffered
                             Image thumbImage = ImageConvert.fromBuffered(currentThumb);
@@ -214,11 +254,14 @@ public class MainController {
                             });
 
                             tilePaneResults.getChildren().add(currentImageView);
+
+
+                            it=it.getNext();
                         }
 
 
                     } catch (Exception e) {
-                        showAlert("Error","Ha ocurrido un error durante la búsqueda de imágenes similares", Alert.AlertType.ERROR);
+                        Utilities.showAlert("Error","Ha ocurrido un error durante la búsqueda de imágenes similares: " + e.getMessage(), Alert.AlertType.ERROR);
                         e.printStackTrace();
                     }
             }
@@ -226,14 +269,6 @@ public class MainController {
 
 
     }
-    private void showAlert(String title, String msg, Alert.AlertType type){
-        // configurar alerta
-        Alert loadingAlert = new Alert(type);
-        loadingAlert.setHeaderText(title);
-        loadingAlert.setContentText(msg);
 
-        // mostrarla
-        loadingAlert.show();
-    }
 
 }

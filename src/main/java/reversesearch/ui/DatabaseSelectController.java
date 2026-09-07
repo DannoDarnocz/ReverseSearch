@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Slider;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import reversesearch.Utilities;
 import reversesearch.filehandler.BinaryLoader;
 import reversesearch.filehandler.FolderLoader;
 import reversesearch.filehandler.Loader;
@@ -21,6 +22,7 @@ import reversesearch.imagehandler.Histogram;
 import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.Optional;
 
 public class DatabaseSelectController {
@@ -113,19 +115,74 @@ public class DatabaseSelectController {
                     } catch (OutOfMemoryError e) {
                         loadingAlert.close();
                         e.printStackTrace();
-                        showAlert("Error","No hay suficiente espacio en memoria para almacenar los histogramas con la cantidad de bins por color especificado.", Alert.AlertType.ERROR);
+                        Utilities.showAlert("Error","No hay suficiente espacio en memoria para almacenar los histogramas con la cantidad de bins por color especificado.", Alert.AlertType.ERROR);
                     }catch (Exception e) {
                         loadingAlert.close();
                         e.printStackTrace();
-                        showAlert("Error","Se ha producido un error al cargar las imágenes.", Alert.AlertType.ERROR);
+                        Utilities.showAlert("Error","Se ha producido un error al cargar las imágenes.", Alert.AlertType.ERROR);
                     }
-            }
+                }
             }
 
 
 
 
         });
+
+        /*
+        btnLoadBinary.setOnAction(    event ->{
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Cargar base de datos como archivo binario");
+            File selectedFile = fileChooser.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
+
+            if(selectedFile!=null){
+                Alert loadingAlert = Utilities.showAlert("Cargando","Este proceso puede tardar algunos minutos", Alert.AlertType.INFORMATION);
+
+                Loader loader = new BinaryLoader();
+                // cargar las imágenes en paralelo porque sino se congela el sistema y no muestra el cuadro de mensaje
+                // de que esta cargando
+                Task<DoublyLinkedList<Histogram> > loadTask = new Task<>() {
+                    @Override
+                    protected DoublyLinkedList<Histogram>  call() throws Exception {
+                        Loader loader = FolderLoader.getInstance();
+                        return loader.loadHistograms(selectedFile.getAbsolutePath(),LoadedData.binsPerColor);
+                    }
+                };
+                // si se carga correctamente entonces avanzar a la siguiente
+                loadTask.setOnSucceeded(e -> {
+                    loadingAlert.close();
+
+                        // obtener lista cargada desde el task
+                        LoadedData.loadedHistograms = loadTask.getValue();
+                    cambiarPantalla(event, "main.fxml",600,750,false);
+                });
+
+                // sino mostrar error y no avanzar
+                loadTask.setOnFailed(e -> {
+                    loadingAlert.close();
+                    // mostrar un mensaje de error
+                    Utilities.showAlert("Error","Se ha producido un error al obtener histogramas del archivo binario", Alert.AlertType.ERROR);
+                    System.out.println(loadTask.getException().getMessage());
+                });
+
+                // ejecutar la tarea de cargar
+                try{
+                    new Thread(loadTask).start();
+                } catch (OutOfMemoryError e) {
+                    loadingAlert.close();
+                    e.printStackTrace();
+                    Utilities.showAlert("Error","No hay suficiente espacio en memoria para almacenar los histogramas con la cantidad de bins por color especificado.", Alert.AlertType.ERROR);
+                }catch (Exception e) {
+                    loadingAlert.close();
+                    e.printStackTrace();
+                    Utilities.showAlert("Error","Se ha producido un error al cargar las imágenes.", Alert.AlertType.ERROR);
+                }
+            }
+        });/
+
+
+         */
+
         btnLoadBinary.setOnAction(    event ->{
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Cargar base de datos como archivo binario");
@@ -138,16 +195,18 @@ public class DatabaseSelectController {
                     DoublyLinkedList<Histogram> histograms = loader.loadHistograms(selectedFile.getAbsolutePath(),LoadedData.binsPerColor);
                     // asignarlo para que la siguiente pantalla conozca los histogramas
                     LoadedData.loadedHistograms = histograms;
+
+                    // todos los histogramas tienen la misma cantidad de bins asi que se puede agarrar el primero y obtenerlo de ahi
+                    Histogram h = histograms.getFirst().getContent();
+                    LoadedData.binsPerColor = h.getBinsPerColor();
                     cambiarPantalla(event, "main.fxml",600,750,false);
                 } catch (Exception e) {
-                    showAlert("Error","Ha ocurrido un error al cargas el archivo binario: " + e, Alert.AlertType.ERROR);
+                    Utilities.showAlert("Error","Ha ocurrido un error al cargas el archivo binario: " + e, Alert.AlertType.ERROR);
                 }
             }
         });
     }
-
-    // mala reutilización de codigo copiando y pegando, lo arreglaremos despues
-    public static void cambiarPantalla(ActionEvent evento, String archivoFxml, double width, double height, boolean resizable){
+    private static void cambiarPantalla(ActionEvent evento, String archivoFxml, double width, double height, boolean resizable){
         try{
             // cargar archivo pasado por parametro
             Parent raiz = FXMLLoader.load(DatabaseSelectController.class.getResource(archivoFxml));
@@ -164,13 +223,5 @@ public class DatabaseSelectController {
             e.printStackTrace(); // imprimir en consola el errorr
         }
     }
-
-    public static void showAlert(String title, String msg, Alert.AlertType type){
-        Alert alert = new Alert(type);
-        alert.setHeaderText(title);
-        alert.setContentText(msg);
-        alert.show();
-    }
-
 
 }

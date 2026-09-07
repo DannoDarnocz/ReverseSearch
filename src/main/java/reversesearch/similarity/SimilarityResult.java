@@ -1,7 +1,7 @@
-package reversesearch.likenessmethod;
+package reversesearch.similarity;
 import reversesearch.imagehandler.ImageReference;
 
-public class SimilarityResult implements Comparable<SimilarityResult> {
+public class SimilarityResult {
     private ImageReference imageReference;
     private double likenessValue;
 
@@ -19,8 +19,4 @@ public class SimilarityResult implements Comparable<SimilarityResult> {
     }
 
 
-    @Override
-    public int compareTo(SimilarityResult o) {
-        return Double.compare( o.likenessValue,this.likenessValue);
-    }
 }

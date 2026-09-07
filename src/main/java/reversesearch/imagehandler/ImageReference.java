@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.Scanner;
 
 public class ImageReference {
@@ -17,4 +18,5 @@ public class ImageReference {
 
     public String getPath(){return path;}
     public BufferedImage getThumbnail() {return thumbnail;}
+    public void setThumbnail(BufferedImage b) {thumbnail=b;}
 }
