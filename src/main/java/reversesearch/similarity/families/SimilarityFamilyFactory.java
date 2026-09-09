@@ -5,7 +5,7 @@ import reversesearch.similarity.likenessmethods.LikenessMethod;
 
 import java.util.Comparator;
 
-public interface SimilarityFamilyFactory {
+public abstract class SimilarityFamilyFactory {
     public abstract LikenessMethod createLikenessMethod();
 
     // Comparator permite comparar SimilarityResult y dependiendo de cual LikenessMethod sea se necesita

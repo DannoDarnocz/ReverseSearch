@@ -1,6 +1,5 @@
 package reversesearch.ui;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,21 +8,15 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Slider;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import reversesearch.Utilities;
-import reversesearch.filehandler.BinaryLoader;
-import reversesearch.filehandler.FolderLoader;
-import reversesearch.filehandler.Loader;
-import reversesearch.filehandler.PromptFileExplorer;
+import reversesearch.filehandler.*;
 import reversesearch.imagehandler.Histogram;
 import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 
 import java.io.File;
-import java.util.Objects;
-import java.util.Optional;
 
 public class DatabaseSelectController {
     // definir controles a accionar desde interfaz grafica
@@ -85,16 +78,14 @@ public class DatabaseSelectController {
                         loadingAlert.close();
 
                         // ver si se encontraron imagenes validas
-                        if(loadTask!=null){
+                        if(loadTask.getValue()!=null && !loadTask.getValue().isEmpty()){
                             // obtener lista cargada desde el task
                             LoadedData.loadedHistograms = loadTask.getValue();
                             cambiarPantalla(event, "main.fxml",600,750,false);
                         }
                         else{
                             // mostrar un mensaje de error
-                            Alert noImageAlert = new Alert(Alert.AlertType.ERROR);
-                            loadingAlert.setHeaderText("Error:");
-                            loadingAlert.setContentText("No hay imágenes .png en el directorio seleccionado");
+                            Utilities.showAlert("Error","No hay imágenes .png válidas en el directorio", Alert.AlertType.ERROR);
                         }
                     });
 
@@ -102,10 +93,8 @@ public class DatabaseSelectController {
                     loadTask.setOnFailed(e -> {
                         loadingAlert.close();
                         // mostrar un mensaje de error
-                        Alert loadError = new Alert(Alert.AlertType.INFORMATION);
-                        loadError.setHeaderText("Error:");
-                        loadError.setContentText("Se ha producido un error al cargar las imágenes: " + loadTask.getException().getMessage());
-                        loadError.showAndWait();
+                        // mostrar un mensaje de error
+                        Utilities.showAlert("Error","Se ha producido un error al cargar las imágenes: " + loadTask.getException().getMessage(), Alert.AlertType.ERROR);
                         System.out.println(loadTask.getException().getMessage());
                     });
 
@@ -189,6 +178,62 @@ public class DatabaseSelectController {
             File selectedFile = fileChooser.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
 
             if(selectedFile!=null){
+                BinaryLoader binaryLoader = new BinaryLoader();
+
+                Alert alert = Utilities.showAlert("Cargando histogramas...","Este proceso puede tardar varios minutos.", Alert.AlertType.INFORMATION);
+
+                // crear una task que devuelve un boolean si se pudo escribir al menos algo de forma correcta
+                Task<DoublyLinkedList<Histogram>> loadTask = new Task<>() {
+                    @Override
+                    protected DoublyLinkedList<Histogram> call() throws Exception {
+                        return binaryLoader.loadHistograms(selectedFile.getAbsolutePath(),LoadedData.binsPerColor);
+                    }
+                };
+
+                // en caso de fallo o logro, se oculta pero en fallo se muestra nueva y no pasa de pantalla
+                loadTask.setOnSucceeded(e ->
+                {
+                    alert.hide();
+                    // obtener lista cargada desde el task
+
+                    // ver si se encontraron histogramas validos
+                    if(!loadTask.getValue().isEmpty()) {
+                        DoublyLinkedList<Histogram> loadedHistograms = loadTask.getValue();
+                        LoadedData.loadedHistograms = loadedHistograms;
+
+                        // todos los histogramas tienen la misma cantidad de bins asi que se puede agarrar el primero y obtenerlo de ahi
+                        Histogram firstHistogram = LoadedData.loadedHistograms.getFirst().getContent();
+                        LoadedData.binsPerColor = firstHistogram.getBinsPerColor();
+
+                        // cambiar de pntalal
+
+                        cambiarPantalla(event, "main.fxml",600,750,false);
+                    }
+                    else{
+                        Utilities.showAlert("Error","No se encontraron histogramas validos en el archivo.", Alert.AlertType.ERROR);
+                    }
+
+                });
+                loadTask.setOnFailed(e -> {
+                    alert.hide();
+                    Utilities.showAlert("Error","Se ha producido un error al cargar las imágenes: " + loadTask.getException().getMessage(), Alert.AlertType.ERROR);
+                    System.out.println(loadTask.getException().getMessage());
+                });
+
+                // ejecutar tarea en un nuevo thread que automaticamente se detiene cuando termina
+                try{
+                    new Thread(loadTask).start();
+                } catch (OutOfMemoryError e) {
+                    alert.close();
+                    e.printStackTrace();
+                    Utilities.showAlert("Error","No hay suficiente espacio en memoria para almacenar los histogramas con la cantidad de bins por color especificado.", Alert.AlertType.ERROR);
+                }catch (Exception e) {
+                    alert.close();
+                    e.printStackTrace();
+                    Utilities.showAlert("Error","Se ha producido un error al cargar los histogramas desde el binario.", Alert.AlertType.ERROR);
+                }
+
+                /*
                 Loader loader = new BinaryLoader();
                 try{
                     // intentar cargar la lista desde el binario
@@ -202,7 +247,7 @@ public class DatabaseSelectController {
                     cambiarPantalla(event, "main.fxml",600,750,false);
                 } catch (Exception e) {
                     Utilities.showAlert("Error","Ha ocurrido un error al cargas el archivo binario: " + e, Alert.AlertType.ERROR);
-                }
+                }*/
             }
         });
     }

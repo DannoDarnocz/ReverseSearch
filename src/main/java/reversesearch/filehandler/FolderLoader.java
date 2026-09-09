@@ -6,6 +6,7 @@ import reversesearch.imagehandler.Histogram;
 import reversesearch.imagehandler.HistogramCalculator;
 import reversesearch.imagehandler.ImageReference;
 import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
+import reversesearch.structure.doublylinkedlist.ListIterator;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class FolderLoader extends Loader {
+public class FolderLoader implements Loader {
     /*private class MultithreadedReader implements Runnable  {
         private File file;
 
@@ -59,11 +60,14 @@ public class FolderLoader extends Loader {
         int threads = Runtime.getRuntime().availableProcessors();
         // ejecutar en paralelo
         try(ExecutorService executor = Executors.newFixedThreadPool(threads)){
-            // future es para el resultado de una funcion asincrona
-            List<Future<Histogram>> futures = new ArrayList<>();
+            // future es para el resultado de una funcion asincrona que aún no se tiene pero se "promete" que enn el futuro
+            // estará construido.
+            // luego debe de iterarse de nuevo en
+            // una nueva lista para evitar conflictos
+            DoublyLinkedList<Future<Histogram>> futures = new DoublyLinkedList<>();
 
             for (File f : files) {
-                futures.add(executor.submit(() -> {
+                futures.addEnd(executor.submit(() -> {
                     // crear referencia con miniatura
                         BufferedImage thumb = Thumbnails.of(f).size(80, 80).asBufferedImage();
                         ImageReference ref = new ImageReference(f.getAbsolutePath(), thumb);
@@ -76,12 +80,17 @@ public class FolderLoader extends Loader {
             executor.shutdown();
 
             // recorrer la lista que se construyo de forma asincrona
-            for (Future<Histogram> future : futures) {
+            ListIterator<Future<Histogram>> it = futures.getIterador();
+            while (it!=null) {
                 try {
-                    loadedList.addStart(future.get()); // uno a la vez
+                    // aqui si se tiene el future construido (o espera a que se termine de construir),
+                    // entonces se obtiene con .get() hasta que esté listo y se asegura que la nueva lista
+                    // quede construida con objetos válidos
+                    loadedList.addStart(it.getContent().get());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                it=it.getNext();
             }
 
         } catch (Exception e) {

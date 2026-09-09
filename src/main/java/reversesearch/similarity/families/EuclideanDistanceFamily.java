@@ -6,7 +6,7 @@ import reversesearch.similarity.likenessmethods.LikenessMethod;
 
 import java.util.Comparator;
 
-public class EuclideanDistanceFamily implements SimilarityFamilyFactory {
+public class EuclideanDistanceFamily extends SimilarityFamilyFactory {
     @Override
     public LikenessMethod createLikenessMethod() {
         return new EuclideanDistance();

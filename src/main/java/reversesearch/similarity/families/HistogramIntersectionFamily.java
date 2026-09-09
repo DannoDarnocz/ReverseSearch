@@ -6,7 +6,7 @@ import reversesearch.similarity.likenessmethods.LikenessMethod;
 
 import java.util.Comparator;
 
-public class HistogramIntersectionFamily implements SimilarityFamilyFactory {
+public class HistogramIntersectionFamily extends SimilarityFamilyFactory {
     @Override
     public LikenessMethod createLikenessMethod() {
         return new HistogramIntersection();

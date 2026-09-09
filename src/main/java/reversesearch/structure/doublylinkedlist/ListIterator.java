@@ -7,14 +7,14 @@ public class ListIterator<T> {
         current = first;
     }
 public boolean hasNext() {
-    if(current.getNext() != null){
+    if(current==null||current.getNext() != null){
         return true;
     }else{
         return false;
     }
 }
 public ListIterator<T>  getNext() {
-    if(current.getNext() == null) return null;
+    if(current==null||current.getNext() == null) return null;
     return new ListIterator(current.getNext());
 }
 

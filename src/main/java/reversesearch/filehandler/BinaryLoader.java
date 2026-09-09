@@ -2,6 +2,7 @@ package reversesearch.filehandler;
 
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 import reversesearch.imagehandler.Histogram;
 import reversesearch.imagehandler.ImageReference;
 
-public class BinaryLoader extends Loader {
+public class BinaryLoader implements Loader {
     @Override
     public DoublyLinkedList<Histogram> loadHistograms(String path, int binQuantity) throws Exception {
         try (DataInputStream in = new DataInputStream(new FileInputStream(path))) {
@@ -44,6 +45,9 @@ public class BinaryLoader extends Loader {
 
             return histograms;
 
+        } catch (EOFException e) {
+            e.printStackTrace();
+            throw new EOFException("El archivo binario tiene un formato inválido"); // enviar de nuevo hacia arriba
         } catch (IOException e) {
             e.printStackTrace();
             throw e; // enviar de nuevo hacia arriba

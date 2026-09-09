@@ -6,7 +6,7 @@ import reversesearch.similarity.likenessmethods.LikenessMethod;
 
 import java.util.Comparator;
 
-public class CosineSimilarityFamily implements SimilarityFamilyFactory {
+public class CosineSimilarityFamily extends SimilarityFamilyFactory {
     @Override
     public LikenessMethod createLikenessMethod(){
         return new CosineSimilarity();
