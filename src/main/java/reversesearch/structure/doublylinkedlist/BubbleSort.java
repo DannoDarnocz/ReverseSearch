@@ -12,31 +12,23 @@ public class BubbleSort implements SortMethod {
         }
 
         boolean swapped;
-
-        ListIterator<SimilarityResult> current= list.getIterador();
-        while(current.hasNext() ){
-            ListIterator<SimilarityResult> nextNode = current.getNext();
-            if (comparator.compare(current.getContent(), nextNode.getContent()) > 0) {
-                // intercambiar valores
-                SimilarityResult temp = current.getContent();
-                current.setContent(nextNode.getContent());
-                nextNode.setContent(temp);
-                swapped = true;
+        do {
+            swapped = false;
+            ListIterator<SimilarityResult> current = list.getIterador();
+            while (current.hasNext()) {
+                ListIterator<SimilarityResult> nextNode = current.getNext();
+                if (comparator.compare(current.getContent(), nextNode.getContent()) > 0) {
+                    // intercambiar valores
+                    SimilarityResult temp = current.getContent();
+                    current.setContent(nextNode.getContent());
+                    nextNode.setContent(temp);
+                    swapped = true;
+                }
+                // obtener siguiente
+                current = nextNode;
             }
-            // obtener siguiente
-            current = nextNode;
-        }
+        }while(swapped);
 
-        while (current != null && current.getNext() != null) {
-            ListIterator<SimilarityResult>nextNode = current.getNext();
-            if (comparator.compare(current.getContent(), nextNode.getContent()) > 0) {
-                // intercambiar valores
-                SimilarityResult temp = current.getContent();
-                current.setContent(nextNode.getContent());
-                nextNode.setContent(temp);
-                swapped = true;
-            }
-            current = nextNode;
         }
     }
-}
+
