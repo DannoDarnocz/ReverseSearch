@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import net.coobird.thumbnailator.Thumbnails;
-import reversesearch.imagehandler.HistogramCalculator;
 import reversesearch.imagehandler.ImageSeeker;
 import reversesearch.structure.doublylinkedlist.DoublyLinkedList;
 import reversesearch.imagehandler.Histogram;

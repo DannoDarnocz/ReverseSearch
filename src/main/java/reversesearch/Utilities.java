@@ -1,13 +1,6 @@
 package reversesearch;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-
-import java.util.Objects;
 
 public class Utilities {
     public static Alert showAlert(String title, String msg, Alert.AlertType type){
@@ -17,10 +10,20 @@ public class Utilities {
         loadingAlert.setContentText(msg);
 
         // mostrarla
-        loadingAlert.show();
+        loadingAlert.showAndWait();
         return loadingAlert;
     }
 
+    /// mostrar alerta de cargando
+    public static Alert showLoadingAlert(String title, String msg){
+        // configurar alerta
+        Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
+        loadingAlert.setHeaderText(title);
+        loadingAlert.setContentText(msg);
 
+        loadingAlert.show();
+
+        return loadingAlert;
+    }
 
 }

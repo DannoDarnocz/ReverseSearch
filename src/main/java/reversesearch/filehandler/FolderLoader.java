@@ -1,6 +1,5 @@
 package reversesearch.filehandler;
 
-import javafx.scene.control.Label;
 import net.coobird.thumbnailator.Thumbnails;
 import reversesearch.imagehandler.Histogram;
 import reversesearch.imagehandler.HistogramCalculator;
@@ -10,29 +9,12 @@ import reversesearch.structure.doublylinkedlist.ListIterator;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
 public class FolderLoader implements Loader {
-    /*private class MultithreadedReader implements Runnable  {
-        private File file;
-
-        public MultithreadedReader(File file) {
-            this.file = file;
-        }
-
-        @Override
-        public void run() {
-            BufferedImage thumb = Thumbnails.of(file).size(160, 160).asBufferedImage();
-            ImageReference ref = new ImageReference(file.getAbsolutePath(), thumb);
-            Histogram histogram = new Histogram(ref, binQuantity);
-            histogram = HistogramCalculator.calculateNormalized(histogram);
-        }*/
 
     // singleton
     private static FolderLoader instance = new FolderLoader();
@@ -88,15 +70,12 @@ public class FolderLoader implements Loader {
                     // quede construida con objetos válidos
                     loadedList.addStart(it.getContent().get());
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace(); // continuar en vez de pararlo completamente, saltandose la iactual
                 }
                 it=it.getNext();
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
         if(loadedList.isEmpty()) return null;
         return loadedList;
     }

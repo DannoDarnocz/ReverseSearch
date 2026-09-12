@@ -29,9 +29,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainController {
     @FXML
@@ -92,7 +89,7 @@ public class MainController {
 
             // empezar el proceso si el directorio no es nulo
             if(selectedDirectory!=null){
-                Alert alert = Utilities.showAlert("Guardando a archivo binario","Este proceso puede tardar varios minutos.", Alert.AlertType.INFORMATION);
+                Alert alert = Utilities.showLoadingAlert("Guardando a archivo binario","Este proceso puede tardar varios minutos.");
 
                 // crear una task que devuelve un boolean si se pudo escribir al menos algo de forma correcta
                 Task<Boolean> saveTask = new Task<>() {
@@ -151,6 +148,7 @@ public class MainController {
                     btnSearch.setDisable(false); // ya hay imagen con la cual comparar
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Utilities.showAlert("Error", "Ha ocurrido un error al subir la imagen: " + e.getMessage(), Alert.AlertType.ERROR);
                 }
             }
         });
@@ -252,6 +250,7 @@ public class MainController {
                                 popup.setScene(new Scene(new StackPane(fullView)));
                                 popup.show();
                             } catch (IOException e2) {
+                                Utilities.showAlert("Error", "No se ha podido obtener la imagen completa.", Alert.AlertType.ERROR);
                                 e2.printStackTrace();
                             }
                         });

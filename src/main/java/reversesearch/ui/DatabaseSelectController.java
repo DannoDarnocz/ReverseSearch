@@ -58,10 +58,7 @@ public class DatabaseSelectController {
 
                 if(selectedDirectory!=null){
                     // mostrar un mensaje de cargar imagenes
-                    Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
-                    loadingAlert.setHeaderText("Procesando imágenes...");
-                    loadingAlert.setContentText("Este proceso puede tardar algunos minutos.");
-                    loadingAlert.show();
+                    Alert loadingAlert = Utilities.showLoadingAlert("Procesando imágenes...","Este proceso puede tardar algunos minutos.");
 
                     // cargar las imágenes en paralelo porque sino se congela el sistema y no muestra el cuadro de mensaje
                     // de que esta cargando
@@ -118,60 +115,6 @@ public class DatabaseSelectController {
 
         });
 
-        /*
-        btnLoadBinary.setOnAction(    event ->{
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Cargar base de datos como archivo binario");
-            File selectedFile = fileChooser.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
-
-            if(selectedFile!=null){
-                Alert loadingAlert = Utilities.showAlert("Cargando","Este proceso puede tardar algunos minutos", Alert.AlertType.INFORMATION);
-
-                Loader loader = new BinaryLoader();
-                // cargar las imágenes en paralelo porque sino se congela el sistema y no muestra el cuadro de mensaje
-                // de que esta cargando
-                Task<DoublyLinkedList<Histogram> > loadTask = new Task<>() {
-                    @Override
-                    protected DoublyLinkedList<Histogram>  call() throws Exception {
-                        Loader loader = FolderLoader.getInstance();
-                        return loader.loadHistograms(selectedFile.getAbsolutePath(),LoadedData.binsPerColor);
-                    }
-                };
-                // si se carga correctamente entonces avanzar a la siguiente
-                loadTask.setOnSucceeded(e -> {
-                    loadingAlert.close();
-
-                        // obtener lista cargada desde el task
-                        LoadedData.loadedHistograms = loadTask.getValue();
-                    cambiarPantalla(event, "main.fxml",600,750,false);
-                });
-
-                // sino mostrar error y no avanzar
-                loadTask.setOnFailed(e -> {
-                    loadingAlert.close();
-                    // mostrar un mensaje de error
-                    Utilities.showAlert("Error","Se ha producido un error al obtener histogramas del archivo binario", Alert.AlertType.ERROR);
-                    System.out.println(loadTask.getException().getMessage());
-                });
-
-                // ejecutar la tarea de cargar
-                try{
-                    new Thread(loadTask).start();
-                } catch (OutOfMemoryError e) {
-                    loadingAlert.close();
-                    e.printStackTrace();
-                    Utilities.showAlert("Error","No hay suficiente espacio en memoria para almacenar los histogramas con la cantidad de bins por color especificado.", Alert.AlertType.ERROR);
-                }catch (Exception e) {
-                    loadingAlert.close();
-                    e.printStackTrace();
-                    Utilities.showAlert("Error","Se ha producido un error al cargar las imágenes.", Alert.AlertType.ERROR);
-                }
-            }
-        });/
-
-
-         */
-
         btnLoadBinary.setOnAction(    event ->{
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Cargar base de datos como archivo binario");
@@ -180,7 +123,7 @@ public class DatabaseSelectController {
             if(selectedFile!=null){
                 BinaryLoader binaryLoader = new BinaryLoader();
 
-                Alert alert = Utilities.showAlert("Cargando histogramas...","Este proceso puede tardar varios minutos.", Alert.AlertType.INFORMATION);
+                Alert alert = Utilities.showLoadingAlert("Cargando histogramas...","Este proceso puede tardar varios minutos.");
 
                 // crear una task que devuelve un boolean si se pudo escribir al menos algo de forma correcta
                 Task<DoublyLinkedList<Histogram>> loadTask = new Task<>() {
@@ -193,6 +136,7 @@ public class DatabaseSelectController {
                 // en caso de fallo o logro, se oculta pero en fallo se muestra nueva y no pasa de pantalla
                 loadTask.setOnSucceeded(e ->
                 {
+
                     alert.hide();
                     // obtener lista cargada desde el task
 
@@ -233,21 +177,6 @@ public class DatabaseSelectController {
                     Utilities.showAlert("Error","Se ha producido un error al cargar los histogramas desde el binario.", Alert.AlertType.ERROR);
                 }
 
-                /*
-                Loader loader = new BinaryLoader();
-                try{
-                    // intentar cargar la lista desde el binario
-                    DoublyLinkedList<Histogram> histograms = loader.loadHistograms(selectedFile.getAbsolutePath(),LoadedData.binsPerColor);
-                    // asignarlo para que la siguiente pantalla conozca los histogramas
-                    LoadedData.loadedHistograms = histograms;
-
-                    // todos los histogramas tienen la misma cantidad de bins asi que se puede agarrar el primero y obtenerlo de ahi
-                    Histogram h = histograms.getFirst().getContent();
-                    LoadedData.binsPerColor = h.getBinsPerColor();
-                    cambiarPantalla(event, "main.fxml",600,750,false);
-                } catch (Exception e) {
-                    Utilities.showAlert("Error","Ha ocurrido un error al cargas el archivo binario: " + e, Alert.AlertType.ERROR);
-                }*/
             }
         });
     }
